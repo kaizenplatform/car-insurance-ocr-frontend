@@ -1,14 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Button } from "@/components/ui/button"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { InsuranceContractForm } from "@/components/insurance-contract-form"
-import { VehicleInfoForm } from "@/components/vehicle-info-form"
-import { PersonalInfoForm } from "@/components/personal-info-form"
-import type { FormData } from "@/types/form-data"
+import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card"
+import { Progress } from "@/src/components/ui/progress"
+import { Button } from "@/src/components/ui/button"
+import { Alert, AlertDescription } from "@/src/components/ui/alert"
+import { InsuranceContractForm } from "@/src/components/insurance-contract-form"
+import { VehicleInfoForm } from "@/src/components/vehicle-info-form"
+import { PersonalInfoForm } from "@/src/components/personal-info-form"
+import type { FormData } from "@/src/types/form-data"
 
 export default function CarInsuranceForm() {
   const [currentStep, setCurrentStep] = useState(1)
@@ -53,11 +53,11 @@ export default function CarInsuranceForm() {
             fieldName.includes("radPrevcontyear") ||
             fieldName.includes("sltAcdtapply")
           ) {
-            autoFilledData.insuranceContract[fieldName] = value
+            autoFilledData.insuranceContract[fieldName as keyof FormData["insuranceContract"]] = value as (string | undefined)
           } else if (fieldName.includes("radBvehtyp") || fieldName.includes("radCommuse")) {
-            autoFilledData.vehicleInfo[fieldName] = value
+            autoFilledData.vehicleInfo[fieldName as keyof FormData["vehicleInfo"]] = value as (string | undefined)
           } else if (fieldName.includes("radBinslbzkc")) {
-            autoFilledData.personalInfo[fieldName] = value
+            autoFilledData.personalInfo[fieldName as keyof FormData["personalInfo"]] = value as (string | undefined)
           }
         }
 
@@ -78,15 +78,15 @@ export default function CarInsuranceForm() {
               fieldName.includes("sltOccdated") ||
               fieldName.includes("sltBprefcl")
             ) {
-              autoFilledData.insuranceContract[fieldName] = value
+              autoFilledData.insuranceContract[fieldName as keyof FormData["insuranceContract"]] = value as (string | undefined)
             } else if (fieldName.includes("lstRgstdtegy") || fieldName.includes("lstRgstdtem")) {
-              autoFilledData.vehicleInfo[fieldName] = value
+              autoFilledData.vehicleInfo[fieldName as keyof FormData["vehicleInfo"]] = value as (string | undefined)
             } else if (
               fieldName.includes("sltBinslbdoby") ||
               fieldName.includes("sltBinslbdobm") ||
               fieldName.includes("sltBinslbdobd")
             ) {
-              autoFilledData.personalInfo[fieldName] = value
+              autoFilledData.personalInfo[fieldName as keyof FormData["personalInfo"]] = value as (string | undefined)
             }
           })
         }
