@@ -1,0 +1,438 @@
+[
+  {
+    "question": "現在契約中の保険会社（共済）をご選択ください。",
+    "radio": {
+      "type": "radio",
+      "name": "radPreContInsco",
+      "options": [
+        "損保ジャパン",
+        "東京海上日動火災",
+        "三井住友海上",
+        "あいおいニッセイ同和損保",
+        "アクサ損保（アクサダイレクト）",
+        "ＳＯＭＰＯダイレクト（セゾン自動車火災）",
+        "チューリッヒ",
+        "イーデザイン損保",
+        "ＳＢＩ損保",
+        "三井ダイレクト",
+        "ＪＡ共済",
+        "楽天損保",
+        "全労済（マイカー共済）",
+        "ＡＩＧ損害保険",
+        "日新火災海上",
+        "共栄火災海上",
+        "全国自動車共済",
+        "セコム損保",
+        "チャブ（エース）",
+        "大同火災海上",
+        "全日本火災共済（旧中小企業共済）",
+        "ニューインディア",
+        "その他"
+      ]
+    },
+    "checkbox": {
+      "type": "checkbox",
+      "name": "radPreContInsco",
+      "options": ["保険会社がわからない"]
+    }
+  },
+  {
+    "question": "現在のご契約は1年契約（1年ごとに更新する契約）ですか？",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:radPrevcontyear",
+      "options": ["1年契約である", "1年契約ではない"]
+    }
+  },
+  {
+    "question": "現在のご契約の満期日をご選択ください。",
+    "checkbox": {
+      "type": "checkbox",
+      "name": "contentsform:chkPrevContMatrUnkwn",
+      "options": ["満期日がわからない"]
+    },
+    "select": {
+      "type": "select",
+      "selects": [
+        {
+          "id": "contentsform:sltOcrdatey",
+          "name": "contentsform:sltOcrdatey",
+          "options": [
+            "令和5(2023)年",
+            "令和6(2024)年",
+            "令和7(2025)年",
+            "令和8(2026)年",
+            "令和9(2027)年",
+            "令和10(2028)年",
+            "令和11(2029)年",
+            "令和12(2030)年",
+            "令和13(2031)年",
+            "令和14(2032)年",
+            "令和15(2033)年",
+            "令和16(2034)年"
+          ]
+        },
+        {
+          "id": "contentsform:sltOcrdatem",
+          "name": "contentsform:sltOcrdatem",
+          "options": ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        {
+          "id": "contentsform:sltOcrdated",
+          "name": "contentsform:sltOcrdated",
+          "options": [
+            "1日",
+            "2日",
+            "3日",
+            "4日",
+            "5日",
+            "6日",
+            "7日",
+            "8日",
+            "9日",
+            "10日",
+            "11日",
+            "12日",
+            "13日",
+            "14日",
+            "15日",
+            "16日",
+            "17日",
+            "18日",
+            "19日",
+            "20日",
+            "21日",
+            "22日",
+            "23日",
+            "24日",
+            "25日",
+            "26日",
+            "27日",
+            "28日",
+            "29日",
+            "30日",
+            "31日"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "question": "現在のご契約の保険期間をご選択ください。",
+    "checkbox": {
+      "type": "checkbox",
+      "name": "contentsform:chkPrevContCcdateUnkwn",
+      "options": ["保険期間がわからない"]
+    },
+    "select": {
+      "type": "select",
+      "selects": [
+        {
+          "id": "contentsform:sltOccdatey",
+          "name": "contentsform:sltOccdatey",
+          "options": [
+            "平成28(2016)年",
+            "平成29(2017)年",
+            "平成30(2018)年",
+            "平成31(2019)年",
+            "令和元(2019)年",
+            "令和2(2020)年",
+            "令和3(2021)年",
+            "令和4(2022)年",
+            "令和5(2023)年",
+            "令和6(2024)年",
+            "令和7(2025)年"
+          ]
+        },
+        {
+          "id": "contentsform:sltOccdatem",
+          "name": "contentsform:sltOccdatem",
+          "options": ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        {
+          "id": "contentsform:sltOccdated",
+          "name": "contentsform:sltOccdated",
+          "options": [
+            "1日",
+            "2日",
+            "3日",
+            "4日",
+            "5日",
+            "6日",
+            "7日",
+            "8日",
+            "9日",
+            "10日",
+            "11日",
+            "12日",
+            "13日",
+            "14日",
+            "15日",
+            "16日",
+            "17日",
+            "18日",
+            "19日",
+            "20日",
+            "21日",
+            "22日",
+            "23日",
+            "24日",
+            "25日",
+            "26日",
+            "27日",
+            "28日",
+            "29日",
+            "30日",
+            "31日"
+          ]
+        },
+        {
+          "id": "contentsform:sltOcrdateyMult",
+          "name": "contentsform:sltOcrdateyMult",
+          "options": [
+            "令和5(2023)年",
+            "令和6(2024)年",
+            "令和7(2025)年",
+            "令和8(2026)年",
+            "令和9(2027)年",
+            "令和10(2028)年",
+            "令和11(2029)年",
+            "令和12(2030)年",
+            "令和13(2031)年",
+            "令和14(2032)年",
+            "令和15(2033)年",
+            "令和16(2034)年"
+          ]
+        },
+        {
+          "id": "contentsform:sltOcrdatemMult",
+          "name": "contentsform:sltOcrdatemMult",
+          "options": ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        {
+          "id": "contentsform:sltOcrdatedMult",
+          "name": "contentsform:sltOcrdatedMult",
+          "options": [
+            "1日",
+            "2日",
+            "3日",
+            "4日",
+            "5日",
+            "6日",
+            "7日",
+            "8日",
+            "9日",
+            "10日",
+            "11日",
+            "12日",
+            "13日",
+            "14日",
+            "15日",
+            "16日",
+            "17日",
+            "18日",
+            "19日",
+            "20日",
+            "21日",
+            "22日",
+            "23日",
+            "24日",
+            "25日",
+            "26日",
+            "27日",
+            "28日",
+            "29日",
+            "30日",
+            "31日"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "question": "以下の中で一番近いと思われる契約年数をご選択ください。",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:radEstcontyear",
+      "options": ["2年", "3年", "4年", "5年", "6年", "7年", "8年", "9年以上"]
+    }
+  },
+  {
+    "question": "満期日より前に現在のご契約を解約してソニー損保へ切替えますか？",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:radCanccont",
+      "options": ["満期日をもって切替える", "途中解約して切替える"]
+    }
+  },
+  {
+    "question": "現在の契約の１つ前の契約も同じ保険会社でしたか？",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:prePrevContJoinSts",
+      "options": ["はい", "いいえ", "現在の契約がはじめての契約"]
+    }
+  },
+  {
+    "question": "その契約の保険期間は1年以上でしたか？",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:prePrevContJoinStsPriod",
+      "options": ["はい", "いいえ"]
+    }
+  },
+  {
+    "question": "現在のノンフリート等級をご選択ください。",
+    "checkbox": {
+      "type": "checkbox",
+      "name": "contentsform:chkManyHokenkikan",
+      "options": ["現在のノンフリート等級がわからない"]
+    },
+    "select": {
+      "type": "select",
+      "selects": [
+        {
+          "id": "contentsform:sltBprefcl",
+          "name": "contentsform:sltBprefcl",
+          "options": [
+            "ご選択ください",
+            "20等級",
+            "19等級",
+            "18等級",
+            "17等級",
+            "16等級",
+            "15等級",
+            "14等級",
+            "13等級",
+            "12等級",
+            "11等級",
+            "10等級",
+            "9等級",
+            "8等級",
+            "7S等級",
+            "7F等級",
+            "7E等級",
+            "7D等級",
+            "7C等級",
+            "7B等級",
+            "7A等級",
+            "6S等級",
+            "6F等級",
+            "6E等級",
+            "6D等級",
+            "6C等級",
+            "6B等級",
+            "6A等級",
+            "5等級",
+            "4等級",
+            "3等級",
+            "2等級",
+            "1等級"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "question": "目安を参考に仮のノンフリート等級をご選択ください。",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:radInsenracc",
+      "options": [
+        "契約13年目程度（18等級）",
+        "契約9年目程度（14等級）",
+        "契約5年目程度（10等級）",
+        "契約2年目程度（7等級）"
+      ]
+    }
+  },
+  {
+    "question": "現在の事故あり係数適用期間（事故あり期間）をご選択ください。",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:sltAcdtapply",
+      "options": ["0年", "1年", "2年", "3年", "4年", "5年", "6年"]
+    },
+    "checkbox": {
+      "type": "checkbox",
+      "name": "contentsform:chkAcdtapplyUnkwn",
+      "options": ["事故あり係数適用期間がわからない"]
+    }
+  },
+  {
+    "question": "現在の保険期間中に保険を使った、または使う予定の事故はありますか？",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:radPrevContAccExst",
+      "options": ["事故なし", "事故あり（1件のみ）", "事故あり（2件以上）"]
+    }
+  },
+  {
+    "question": "事故の種類をご選択ください。",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:radAcctyp",
+      "options": ["3等級ダウン事故", "等級すえおき事故", "1等級ダウン事故", "ノーカウント事故"]
+    }
+  },
+  {
+    "question": "現在のご契約の解約日をご選択ください。",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:radCanccont",
+      "options": ["満期日をもって切替える", "途中解約して切替える"]
+    },
+    "select": {
+      "type": "select",
+      "selects": [
+        {
+          "id": "contentsform:sltOcanccontdategy",
+          "name": "contentsform:sltOcanccontdategy",
+          "options": ["令和5(2023)年", "令和6(2024)年", "令和7(2025)年", "令和8(2026)年", "令和9(2027)年"]
+        },
+        {
+          "id": "contentsform:sltOcanccontdatem",
+          "name": "contentsform:sltOcanccontdatem",
+          "options": ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        {
+          "id": "contentsform:sltOcanccontdated",
+          "name": "contentsform:sltOcanccontdated",
+          "options": [
+            "1日",
+            "2日",
+            "3日",
+            "4日",
+            "5日",
+            "6日",
+            "7日",
+            "8日",
+            "9日",
+            "10日",
+            "11日",
+            "12日",
+            "13日",
+            "14日",
+            "15日",
+            "16日",
+            "17日",
+            "18日",
+            "19日",
+            "20日",
+            "21日",
+            "22日",
+            "23日",
+            "24日",
+            "25日",
+            "26日",
+            "27日",
+            "28日",
+            "29日",
+            "30日",
+            "31日"
+          ]
+        }
+      ]
+    }
+  }
+]
