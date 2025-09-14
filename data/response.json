@@ -1,0 +1,195 @@
+[
+  {
+    "question": "現在契約中の保険会社（共済）をご選択ください。",
+    "radio": {
+      "type": "radio",
+      "name": "radPreContInsco",
+      "value": "その他"
+    },
+    "checkbox": {
+      "type": "checkbox",
+      "name": "radPreContInsco",
+      "values": []
+    }
+  },
+  {
+    "question": "現在のご契約は1年契約（1年ごとに更新する契約）ですか？",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:radPrevcontyear",
+      "value": "1年契約である"
+    }
+  },
+  {
+    "question": "現在のご契約の満期日をご選択ください。",
+    "checkbox": {
+      "type": "checkbox",
+      "name": "contentsform:chkPrevContMatrUnkwn",
+      "values": []
+    },
+    "select": {
+      "type": "select",
+      "selects": [
+        {
+          "id": "contentsform:sltOcrdatey",
+          "name": "contentsform:sltOcrdatey",
+          "value": "令和7(2025)年"
+        },
+        {
+          "id": "contentsform:sltOcrdatem",
+          "name": "contentsform:sltOcrdatem",
+          "value": "10月"
+        },
+        {
+          "id": "contentsform:sltOcrdated",
+          "name": "contentsform:sltOcrdated",
+          "value": "15日"
+        }
+      ]
+    }
+  },
+  {
+    "question": "現在のご契約の保険期間をご選択ください。",
+    "checkbox": {
+      "type": "checkbox",
+      "name": "contentsform:chkPrevContCcdateUnkwn",
+      "values": []
+    },
+    "select": {
+      "type": "select",
+      "selects": [
+        {
+          "id": "contentsform:sltOccdatey",
+          "name": "contentsform:sltOccdatey",
+          "value": "令和5(2023)年"
+        },
+        {
+          "id": "contentsform:sltOccdatem",
+          "name": "contentsform:sltOccdatem",
+          "value": "10月"
+        },
+        {
+          "id": "contentsform:sltOccdated",
+          "name": "contentsform:sltOccdated",
+          "value": "16日"
+        },
+        {
+          "id": "contentsform:sltOcrdateyMult",
+          "name": "contentsform:sltOcrdateyMult",
+          "value": "令和7(2025)年"
+        },
+        {
+          "id": "contentsform:sltOcrdatemMult",
+          "name": "contentsform:sltOcrdatemMult",
+          "value": "10月"
+        },
+        {
+          "id": "contentsform:sltOcrdatedMult",
+          "name": "contentsform:sltOcrdatedMult",
+          "value": "15日"
+        }
+      ]
+    }
+  },
+  {
+    "question": "現在のノンフリート等級をご選択ください。",
+    "checkbox": {
+      "type": "checkbox",
+      "name": "contentsform:chkManyHokenkikan",
+      "values": []
+    },
+    "select": {
+      "type": "select",
+      "selects": [
+        {
+          "id": "contentsform:sltBprefcl",
+          "name": "contentsform:sltBprefcl",
+          "value": "13等級"
+        }
+      ]
+    }
+  },
+  {
+    "question": "現在の事故あり係数適用期間（事故あり期間）をご選択ください。",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:sltAcdtapply",
+      "value": "0年"
+    },
+    "checkbox": {
+      "type": "checkbox",
+      "name": "contentsform:chkAcdtapplyUnkwn",
+      "values": []
+    }
+  },
+  {
+    "question": "初度登録年月（初度検査年月）をご選択ください。",
+    "checkbox": {
+      "type": "checkbox",
+      "name": "contentsform:chkRgstDte",
+      "values": []
+    },
+    "select": {
+      "type": "select",
+      "selects": [
+        {
+          "id": "contentsform:lstRgstdtegy",
+          "name": "contentsform:lstRgstdtegy",
+          "value": "令和4(2022)年"
+        },
+        {
+          "id": "contentsform:lstRgstdtem",
+          "name": "contentsform:lstRgstdtem",
+          "value": "3月"
+        }
+      ]
+    }
+  },
+  {
+    "question": "お車の型式・車名を教えてください。",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:radBvehtyp",
+      "value": "メーカーから探す（型式がわからない方）"
+    }
+  },
+  {
+    "question": "お車の使用目的をご選択ください。",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:radCommuse",
+      "value": "主に家庭用※通勤用含む"
+    }
+  },
+  {
+    "question": "主にお車を使用される方（記名被保険者）は、どなたですか？ （お1人だけご選択ください）",
+    "radio": {
+      "type": "radio",
+      "name": "contentsform:radBinslbzkc",
+      "value": "ご契約者自身"
+    }
+  },
+  {
+    "question": "主にお車を使用される方（記名被保険者）の生年月日をご選択ください。",
+    "select": {
+      "type": "select",
+      "selects": [
+        {
+          "id": "contentsform:sltBinslbdoby",
+          "name": "contentsform:sltBinslbdoby",
+          "value": "平成8(1996)年"
+        },
+        {
+          "id": "contentsform:sltBinslbdobm",
+          "name": "contentsform:sltBinslbdobm",
+          "value": "4月"
+        },
+        {
+          "id": "contentsform:sltBinslbdobd",
+          "name": "contentsform:sltBinslbdobd",
+          "value": "1日"
+        }
+      ]
+    }
+  }
+]

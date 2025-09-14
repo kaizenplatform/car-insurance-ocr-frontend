@@ -1,7 +1,7 @@
-import page1Data from "../data/page1.json"
-import page2Data from "../data/page2.json"
-import page3Data from "../data/page3.json"
-import mainData from "../data/main.json"
+import page1Data from "@/data/page1.json"
+import page2Data from "@/data/page2.json"
+import page3Data from "@/data/page3.json"
+import mainData from "@/data/main.json"
 
 export interface FormField {
   question: string

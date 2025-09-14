@@ -1,15 +1,13 @@
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import page1Data from "@/data/page1.json"
 import mainData from "@/data/main.json"
 
 interface InsuranceContractFormProps {
@@ -21,22 +19,13 @@ export function InsuranceContractForm({ initialData, onNext }: InsuranceContract
   const [formData, setFormData] = useState(initialData)
   const [conditionalFields, setConditionalFields] = useState<Record<string, boolean>>({})
 
-  const enabledFields = new Set()
-  mainData.forEach((item: any) => {
-    if (item.radio?.name) enabledFields.add(item.radio.name)
-    if (item.checkbox?.name) enabledFields.add(item.checkbox.name)
-    if (item.select?.selects) {
-      item.select.selects.forEach((select: any) => {
-        if (select.name) enabledFields.add(select.name)
-      })
-    }
-  })
-
-  const isFieldEnabled = (fieldName: string) => enabledFields.has(fieldName)
+  useEffect(() => {
+    console.log("[v0] Insurance contract form received new initialData:", initialData)
+    setFormData(initialData)
+  }, [initialData])
 
   const updateFormData = (name: string, value: string | boolean) => {
     setFormData((prev: any) => ({ ...prev, [name]: value }))
-
     handleConditionalFields(name, value)
   }
 
@@ -66,7 +55,6 @@ export function InsuranceContractForm({ initialData, onNext }: InsuranceContract
   }
 
   const renderField = (item: any, index: number) => {
-    const isEnabled = isFieldEnabled(item.radio?.name || item.checkbox?.name || "")
     const shouldShow =
       !conditionalFields.hasOwnProperty(item.radio?.name || item.checkbox?.name || "") ||
       conditionalFields[item.radio?.name || item.checkbox?.name || ""]
@@ -74,7 +62,7 @@ export function InsuranceContractForm({ initialData, onNext }: InsuranceContract
     if (!shouldShow) return null
 
     return (
-      <Card key={index} className={`mb-6 ${!isEnabled ? "opacity-50 bg-gray-50" : ""}`}>
+      <Card key={index} className="mb-6">
         <CardContent className="p-4">
           <Label className="text-base font-medium mb-4 block">{item.question}</Label>
 
@@ -82,7 +70,6 @@ export function InsuranceContractForm({ initialData, onNext }: InsuranceContract
             <RadioGroup
               value={formData[item.radio.name] || ""}
               onValueChange={(value) => updateFormData(item.radio.name, value)}
-              disabled={!isEnabled}
               className="space-y-2"
             >
               {item.radio.options.map((option: string, optIndex: number) => (
@@ -104,7 +91,6 @@ export function InsuranceContractForm({ initialData, onNext }: InsuranceContract
                     id={`${item.checkbox.name}-${optIndex}`}
                     checked={formData[`${item.checkbox.name}-${optIndex}`] || false}
                     onCheckedChange={(checked) => updateFormData(`${item.checkbox.name}-${optIndex}`, checked)}
-                    disabled={!isEnabled}
                   />
                   <Label htmlFor={`${item.checkbox.name}-${optIndex}`} className="text-sm">
                     {option}
@@ -116,26 +102,32 @@ export function InsuranceContractForm({ initialData, onNext }: InsuranceContract
 
           {item.select && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-              {item.select.selects.map((select: any, selectIndex: number) => (
-                <div key={selectIndex}>
-                  <Select
-                    value={formData[select.name] || ""}
-                    onValueChange={(value) => updateFormData(select.name, value)}
-                    disabled={!isEnabled}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="選択してください" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {select.options.map((option: string, optIndex: number) => (
-                        <SelectItem key={optIndex} value={option}>
-                          {option}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              ))}
+              {item.select.selects.map((select: any, selectIndex: number) => {
+                let placeholder = "選択してください"
+                if (select.name && select.name.includes("datey")) placeholder = "年"
+                else if (select.name && select.name.includes("datem")) placeholder = "月"
+                else if (select.name && select.name.includes("dated")) placeholder = "日"
+
+                return (
+                  <div key={selectIndex}>
+                    <Select
+                      value={formData[select.name] || ""}
+                      onValueChange={(value) => updateFormData(select.name, value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder={placeholder} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {select.options.map((option: string, optIndex: number) => (
+                          <SelectItem key={optIndex} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )
+              })}
             </div>
           )}
         </CardContent>
@@ -145,7 +137,7 @@ export function InsuranceContractForm({ initialData, onNext }: InsuranceContract
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {page1Data.map((item, index) => renderField(item, index))}
+      {mainData.map((item, index) => renderField(item, index))}
 
       <div className="flex justify-end pt-6">
         <Button type="submit" className="px-8">

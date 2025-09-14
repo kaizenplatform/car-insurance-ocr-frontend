@@ -3,21 +3,21 @@
 import type React from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { FormFieldRenderer } from "@/components/form-field-renderer"
 import { getPageFields } from "@/utils/form-config"
+import { FormFieldRenderer } from "./form-field-render"
 
 interface VehicleInfoFormProps {
   initialData: any
-  onSubmit: (data: any) => void
+  onNext: (data: any) => void
   onPrevious: () => void
 }
 
-export function VehicleInfoForm({ initialData, onSubmit, onPrevious }: VehicleInfoFormProps) {
+export function VehicleInfoForm({ initialData, onNext, onPrevious }: VehicleInfoFormProps) {
   const [formData, setFormData] = useState(initialData)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onSubmit(formData)
+    onNext(formData)
   }
 
   const updateFormData = (key: string, value: string) => {
@@ -38,8 +38,8 @@ export function VehicleInfoForm({ initialData, onSubmit, onPrevious }: VehicleIn
         <Button type="button" variant="outline" onClick={onPrevious}>
           前に戻る
         </Button>
-        <Button type="submit" className="px-8 bg-green-600 hover:bg-green-700">
-          見積もりを取得する
+        <Button type="submit" className="px-8">
+          次へ進む
         </Button>
       </div>
     </form>

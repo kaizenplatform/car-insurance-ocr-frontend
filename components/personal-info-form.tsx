@@ -3,20 +3,21 @@
 import type React from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { FormFieldRenderer } from "@/components/form-field-renderer"
 import { getPageFields } from "@/utils/form-config"
+import { FormFieldRenderer } from "./form-field-render"
 
 interface PersonalInfoFormProps {
   initialData: any
-  onNext: (data: any) => void
+  onSubmit: (data: any) => void
+  onPrevious: () => void
 }
 
-export function PersonalInfoForm({ initialData, onNext }: PersonalInfoFormProps) {
+export function PersonalInfoForm({ initialData, onSubmit, onPrevious }: PersonalInfoFormProps) {
   const [formData, setFormData] = useState(initialData)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onNext(formData)
+    onSubmit(formData)
   }
 
   const updateFormData = (key: string, value: string) => {
@@ -33,9 +34,12 @@ export function PersonalInfoForm({ initialData, onNext }: PersonalInfoFormProps)
         ))}
       </div>
 
-      <div className="flex justify-end pt-4 border-t">
-        <Button type="submit" className="px-8">
-          次へ進む
+      <div className="flex justify-between pt-4 border-t">
+        <Button type="button" variant="outline" onClick={onPrevious}>
+          前に戻る
+        </Button>
+        <Button type="submit" className="px-8 bg-green-600 hover:bg-green-700">
+          見積もりを取得する
         </Button>
       </div>
     </form>
