@@ -14,22 +14,23 @@ interface FormFieldRendererProps {
 
 export function FormFieldRenderer({ field, formData, updateFormData }: FormFieldRendererProps) {
   const renderRadioField = (radioConfig: NonNullable<FormField["radio"]>) => {
-    const isEnabled = isFieldEnabled(radioConfig.name)
-
     return (
-      <div className={`space-y-3 ${!isEnabled ? "opacity-50" : ""}`}>
+      <div className="space-y-3">
         <RadioGroup
           value={formData[radioConfig.name] || ""}
-          onValueChange={(value) => isEnabled && updateFormData(radioConfig.name, value)}
-          disabled={!isEnabled}
+          onValueChange={(value) => updateFormData(radioConfig.name, value)}
           className="space-y-2"
         >
           {radioConfig.options.map((option, index) => (
             <div key={index} className="flex items-center space-x-2">
-              <RadioGroupItem value={option} id={`${radioConfig.name}-${index}`} disabled={!isEnabled} />
+              <RadioGroupItem 
+                value={option} 
+                id={`${radioConfig.name}-${index}`} 
+                className="border-blue-500 text-blue-500 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500" 
+              />
               <Label
                 htmlFor={`${radioConfig.name}-${index}`}
-                className={`text-sm ${!isEnabled ? "text-gray-400" : ""}`}
+                className="text-sm"
               >
                 {option}
               </Label>
@@ -41,23 +42,21 @@ export function FormFieldRenderer({ field, formData, updateFormData }: FormField
   }
 
   const renderCheckboxField = (checkboxConfig: NonNullable<FormField["checkbox"]>) => {
-    const isEnabled = isFieldEnabled(checkboxConfig.name)
-
     return (
-      <div className={`space-y-2 ${!isEnabled ? "opacity-50" : ""}`}>
+      <div className="space-y-2">
         {checkboxConfig.options.map((option, index) => (
           <div key={index} className="flex items-center space-x-2">
             <Checkbox
               id={`${checkboxConfig.name}-${index}`}
-              disabled={!isEnabled}
               checked={formData[`${checkboxConfig.name}-${index}`] || false}
               onCheckedChange={(checked) =>
-                isEnabled && updateFormData(`${checkboxConfig.name}-${index}`, checked ? "true" : "false")
+                updateFormData(`${checkboxConfig.name}-${index}`, checked ? "true" : "false")
               }
+              className="border-blue-500 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
             />
             <Label
               htmlFor={`${checkboxConfig.name}-${index}`}
-              className={`text-sm ${!isEnabled ? "text-gray-400" : ""}`}
+              className="text-sm"
             >
               {option}
             </Label>
@@ -70,30 +69,25 @@ export function FormFieldRenderer({ field, formData, updateFormData }: FormField
   const renderSelectField = (selectConfig: NonNullable<FormField["select"]>) => {
     return (
       <div className="flex gap-4 flex-wrap">
-        {selectConfig.selects.map((select, index) => {
-          const isEnabled = isFieldEnabled(select.name)
-
-          return (
-            <div key={index} className={!isEnabled ? "opacity-50" : ""}>
-              <Select
-                value={formData[select.name] || ""}
-                onValueChange={(value) => isEnabled && updateFormData(select.name, value)}
-                disabled={!isEnabled}
-              >
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="選択してください" />
-                </SelectTrigger>
-                <SelectContent>
-                  {select.options.map((option, optionIndex) => (
-                    <SelectItem key={optionIndex} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )
-        })}
+        {selectConfig.selects.map((select, index) => (
+          <div key={index}>
+            <Select
+              value={formData[select.name] || ""}
+              onValueChange={(value) => updateFormData(select.name, value)}
+            >
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="選択してください" />
+              </SelectTrigger>
+              <SelectContent>
+                {select.options.map((option, optionIndex) => (
+                  <SelectItem key={optionIndex} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        ))}
       </div>
     )
   }
@@ -102,11 +96,6 @@ export function FormFieldRenderer({ field, formData, updateFormData }: FormField
     <div className="space-y-4 p-4 border rounded-lg">
       <Label className="text-base font-medium block">
         {field.question}
-        {(!field.radio || !isFieldEnabled(field.radio.name)) &&
-          (!field.checkbox || !isFieldEnabled(field.checkbox.name)) &&
-          (!field.select || !field.select.selects.some((s) => isFieldEnabled(s.name))) && (
-            <span className="ml-2 text-xs text-gray-400 font-normal">(無効)</span>
-          )}
       </Label>
 
       {field.radio && renderRadioField(field.radio)}

@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/src/components/ui/button"
 import { getPageFields } from "@/src/utils/form-config"
 import { FormFieldRenderer } from "./form-field-render"
@@ -10,10 +10,15 @@ interface PersonalInfoFormProps {
   initialData: any
   onSubmit: (data: any) => void
   onPrevious: () => void
+  onChange?: () => void
 }
 
-export function PersonalInfoForm({ initialData, onSubmit, onPrevious }: PersonalInfoFormProps) {
+export function PersonalInfoForm({ initialData, onSubmit, onPrevious, onChange }: PersonalInfoFormProps) {
   const [formData, setFormData] = useState(initialData)
+
+  useEffect(() => {
+    setFormData(initialData)
+  }, [initialData])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,13 +27,14 @@ export function PersonalInfoForm({ initialData, onSubmit, onPrevious }: Personal
 
   const updateFormData = (key: string, value: string) => {
     setFormData((prev: any) => ({ ...prev, [key]: value }))
+    onChange?.() // フォームが変更されたことを通知
   }
 
   const pageFields = getPageFields(3)
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-6 max-h-96 overflow-y-auto">
+      <div className="space-y-6">
         {pageFields.map((field, index) => (
           <FormFieldRenderer key={index} field={field} formData={formData} updateFormData={updateFormData} />
         ))}
