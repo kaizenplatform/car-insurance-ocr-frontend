@@ -159,7 +159,7 @@ export function StepForm({ step }: StepFormProps) {
           variant="outline"
           className="bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
         >
-          {isLoading ? "データ取得中..." : "APIから追加データを取得"}
+          {isLoading ? "データ取得中..." : "保険証券画像からデータを取得"}
         </Button>
       </div>
       <ImageUploadModal
@@ -171,7 +171,7 @@ export function StepForm({ step }: StepFormProps) {
       {showAutoFillNotice && (
         <Alert className="bg-blue-50 border-blue-200">
           <AlertDescription className="text-blue-800">
-            ✅ ステップ{step}にAPIからの追加データが入力されました！
+            ✅ ステップ{step}に画像読み込みから追加データが入力されました！
           </AlertDescription>
         </Alert>
       )}
