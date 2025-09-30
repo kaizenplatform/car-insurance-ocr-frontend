@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { ImageUploadModal } from "@/src/components/ImageUploadModal"
 import { useRouter } from "next/navigation"
 import { Button } from "@/src/components/ui/button"
 import { Alert, AlertDescription } from "@/src/components/ui/alert"
@@ -17,18 +18,29 @@ interface StepFormProps {
 export function StepForm({ step }: StepFormProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [showImageModal, setShowImageModal] = useState(false)
   const [showAutoFillNotice, setShowAutoFillNotice] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const { saveAllData, enableAutoFill } = useSessionStorage()
 
+  // 画像アップロード後のAPIモックPOST
+  const handleImageUpload = async (file: File) => {
+    // 実際のアップロードはモック
+    await new Promise(res => setTimeout(res, 1000));
+    // モックAPI: /api/form-data
+    const res = await fetch("/api/form-data", {
+      method: "POST",
+      body: file,
+    });
+    console.log(res);
+    // レスポンスとしてresponse.jsonを返す
+    saveAllData(await res.json());
+    enableAutoFill();
+    setShowAutoFillNotice(true);
+  };
+
   const fetchAndAutoFillForm = async () => {
-    setIsLoading(true)
-    const response = await fetch(`/api/form-data`)
-    const responseData = await response.json() as FormDataResponse
-    // sessionに保存
-    saveAllData(responseData)
-    enableAutoFill()
-    setIsLoading(false)
+    setShowImageModal(true);
   }
 
   // バリデーション関数（段階的表示対応版）
@@ -151,6 +163,11 @@ export function StepForm({ step }: StepFormProps) {
           {isLoading ? "データ取得中..." : "APIから追加データを取得"}
         </Button>
       </div>
+      <ImageUploadModal
+        open={showImageModal}
+        onClose={() => setShowImageModal(false)}
+        onUpload={handleImageUpload}
+      />
 
       {showAutoFillNotice && (
         <Alert className="bg-blue-50 border-blue-200">

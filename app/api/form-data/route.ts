@@ -39,18 +39,10 @@ function filterDataByStep(data: any[], step: number) {
   })
 }
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const step = searchParams.get("step")
-
+    // 画像ファイル受け取り（モック）
     await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    if (step) {
-      const stepNumber = parseInt(step)
-      const filteredData: FormItem[] = filterDataByStep(responseData as FormItem[], stepNumber)
-      return NextResponse.json(filteredData)
-    }
 
     // すべてのステップのデータを結合して返す
     const allStepsData = {
@@ -61,6 +53,6 @@ export async function GET(request: Request) {
 
     return NextResponse.json(allStepsData)
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch form data" }, { status: 500 })
+    return NextResponse.json({ error: "Failed to fetch form data" }, { status: 500 });
   }
 }
