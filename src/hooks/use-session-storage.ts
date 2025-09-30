@@ -1,77 +1,91 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import type { FormData } from "@/src/types/form-data"
+import type { FormData, FormDataResponse } from "@/src/types/form-data"
 
 const STORAGE_KEY = "insurance-form-data"
+const AUTO_FILL_FLAG = "autoFillFlag"
+const UPDATE_EVENT_KEY = "sessionStorageUpdate"
 
 export function useSessionStorage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     insuranceContract: {},
     vehicleInfo: {},
     personalInfo: {},
-  })
+  });
+  const [autoFillEnabled, setAutoFillEnabled] = useState(false);
 
-  // セッションストレージからデータを読み込み
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = sessionStorage.getItem(STORAGE_KEY)
-      if (saved) {
-        try {
-          const parsedData = JSON.parse(saved)
-          setFormData(parsedData)
-        } catch (error) {
-          console.error("Failed to parse session storage data:", error)
-        }
+  const updateStateFromStorage = () => {
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsedData = JSON.parse(saved);
+        setFormData(parsedData);
+      } catch (error) {
+        console.error("Failed to parse session storage data:", error);
       }
     }
-  }, [])
+    const savedAutoFillFlag = sessionStorage.getItem(AUTO_FILL_FLAG);
+    setAutoFillEnabled(savedAutoFillFlag === "true");
+  };
 
-  // データを保存する関数
-  const saveFormData = (newData: Partial<FormData>) => {
-    const updatedData = { ...formData, ...newData }
-    setFormData(updatedData)
-    
+  useEffect(() => {
     if (typeof window !== "undefined") {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData))
+      updateStateFromStorage(); // Initial load
+      window.addEventListener(UPDATE_EVENT_KEY, updateStateFromStorage);
+      return () => {
+        window.removeEventListener(UPDATE_EVENT_KEY, updateStateFromStorage);
+      };
     }
+  }, []);
+
+  const dispatchUpdateEvent = () => {
+    window.dispatchEvent(new CustomEvent(UPDATE_EVENT_KEY));
   }
 
-  // 特定のステップのデータを更新
-  const updateStepData = (step: number, stepData: Record<string, string | boolean | undefined>) => {
-    const stepKeys = ["", "insuranceContract", "vehicleInfo", "personalInfo"] as const
-    const stepKey = stepKeys[step] as keyof FormData
-    
-    if (stepKey) {
-      saveFormData({ [stepKey]: stepData })
-    }
-  }
-
-  // 特定のステップのデータを取得
-  const getStepData = (step: number) => {
-    const stepKeys = ["", "insuranceContract", "vehicleInfo", "personalInfo"] as const
-    const stepKey = stepKeys[step] as keyof FormData
-    return stepKey ? formData[stepKey] : {}
-  }
-
-  // セッションストレージをクリア
-  const clearFormData = () => {
-    const emptyData: FormData = {
-      insuranceContract: {},
-      vehicleInfo: {},
-      personalInfo: {},
-    }
-    setFormData(emptyData)
+  const enableAutoFill = (): boolean => {
     if (typeof window !== "undefined") {
-      sessionStorage.removeItem(STORAGE_KEY)
+      sessionStorage.setItem(AUTO_FILL_FLAG, "true");
+      dispatchUpdateEvent();
+      return true;
+    }
+    return false;
+  }
+
+  const isAutoFillEnabled = (): boolean => {
+    return autoFillEnabled;
+  }
+
+  const saveAllData = (allData: FormDataResponse) => {
+    const formattedData = {
+      insuranceContract: allData.step1,
+      vehicleInfo: allData.step2,
+      personalInfo: allData.step3,
+    }
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(formattedData));
+      dispatchUpdateEvent();
+    }
+  }
+
+  const getStepData = (step: number): Record<string, any> | null => {
+    switch (step) {
+      case 1:
+        return formData.insuranceContract
+      case 2:
+        return formData.vehicleInfo
+      case 3:
+        return formData.personalInfo
+      default:
+        return null
     }
   }
 
   return {
     formData,
-    saveFormData,
-    updateStepData,
+    saveAllData,
     getStepData,
-    clearFormData,
+    isAutoFillEnabled,
+    enableAutoFill,
   }
 }

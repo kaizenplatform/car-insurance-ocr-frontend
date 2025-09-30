@@ -21,7 +21,7 @@ export function transformApiResponse() {
     "contentsform:sltOcrdatedMult": `${policyData.expiryDate.day}日`,
     "contentsform:sltBprefcl": policyData.nonFleetGrade || "",
     "contentsform:sltAcdtapply": policyData.accidentCoefficientPeriod || "",
-    "contentsform:chkRgstDte-0": policyData.firstRegistrationYear ? true : false,
+    "contentsform:chkRgstDte": policyData.firstRegistrationYear ? true : false,
     "contentsform:radBvehtyp": "型式を入力する（型式がわかる方）",
     "contentsform:radCommuse": policyData.vehicleUsage || "",
     "contentsform:radBinslbzkc": "ご契約者自身",

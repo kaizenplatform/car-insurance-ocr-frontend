@@ -43,16 +43,23 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const step = searchParams.get("step")
-    
+
     await new Promise((resolve) => setTimeout(resolve, 1000))
-    
+
     if (step) {
       const stepNumber = parseInt(step)
       const filteredData: FormItem[] = filterDataByStep(responseData as FormItem[], stepNumber)
       return NextResponse.json(filteredData)
     }
-    
-    return NextResponse.json(responseData)
+
+    // すべてのステップのデータを結合して返す
+    const allStepsData = {
+      step1: filterDataByStep(responseData as FormItem[], 1),
+      step2: filterDataByStep(responseData as FormItem[], 2),
+      step3: filterDataByStep(responseData as FormItem[], 3),
+    }
+
+    return NextResponse.json(allStepsData)
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch form data" }, { status: 500 })
   }

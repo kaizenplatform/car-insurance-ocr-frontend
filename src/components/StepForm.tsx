@@ -1,0 +1,136 @@
+import { useMemo, useEffect } from "react";
+import { Button } from "@/src/components/ui/button";
+import { FormItem } from "../types/form-data";
+import { useFormVisibility } from "../hooks/use-form-visibility";
+import { FormField } from "./FormField";
+import { useSessionStorage } from "../hooks/use-session-storage";
+import { useAutoFillForm } from "../hooks/use-auto-fill-form";
+import { useAutoFillHighlight } from "../hooks/use-auto-fill-highlight";
+
+interface StepFormProps {
+  mainData: FormItem[];
+  stepNumber: number;
+  onNext?: (data: any) => void;
+  onPrevious?: () => void;
+  onSubmit?: (data: any) => void;
+  nextButtonText?: string;
+  previousButtonText?: string;
+  submitButtonText?: string;
+}
+
+export function StepForm({
+  mainData,
+  stepNumber,
+  onNext,
+  onPrevious,
+  onSubmit,
+  nextButtonText = "次へ進む",
+  previousButtonText = "前に戻る",
+  submitButtonText = "見積もりを取得する",
+}: StepFormProps) {
+  const { visibleIndex, formData, handleFieldChange } = useFormVisibility(mainData);
+  const { isAutoFillEnabled, getStepData } = useSessionStorage();
+  const autoFillEnabled = isAutoFillEnabled();
+  const stepDataValues = getStepData(stepNumber);
+
+  const formValuesObject = useMemo(() => {
+    if (!autoFillEnabled || !Array.isArray(stepDataValues)) {
+      return null;
+    }
+    return stepDataValues.reduce((acc: Record<string, any>, item: any) => {
+      if (item.radio && item.radio.name) {
+        acc[item.radio.name] = item.radio.value;
+      }
+      if (item.select && item.select.selects) {
+        item.select.selects.forEach((select: any) => {
+          if (select.name && select.value) {
+            acc[select.name] = select.value;
+          }
+        });
+      }
+      return acc;
+    }, {});
+  }, [stepDataValues, autoFillEnabled]);
+
+  const { isAutoFilling, isAutoFillComplete, focusAndScrollToField } = useAutoFillForm(
+    autoFillEnabled ? mainData : null,
+    formValuesObject,
+    handleFieldChange
+  );
+
+  const highlightedFields = useAutoFillHighlight(
+    mainData,
+    formData,
+    isAutoFillComplete
+  );
+
+  // Handle focus for manual input
+  useEffect(() => {
+    if (!isAutoFilling && visibleIndex < mainData.length) {
+      // Use setTimeout to ensure focus logic runs after DOM update
+      setTimeout(() => {
+        focusAndScrollToField(visibleIndex);
+      }, 0);
+    }
+  }, [visibleIndex, isAutoFilling, focusAndScrollToField, mainData.length]);
+
+
+  const isFieldHighlighted = (item: FormItem): boolean => {
+    const keys: string[] = [];
+    if (item.radio?.name) keys.push(item.radio.name);
+    if (item.checkbox?.name) {
+      item.checkbox.options?.forEach((o, i) => keys.push(`${item.checkbox!.name}-${i}`))}
+    if (item.select?.selects) {
+      item.select.selects.forEach(s => keys.push(s.name));
+    }
+    return keys.some(key => highlightedFields.has(key));
+  };
+
+  // Handle focus for auto-fill completion
+  useEffect(() => {
+    if (isAutoFillComplete && highlightedFields.size > 0) {
+      const firstHighlightedIndex = mainData.findIndex(item => isFieldHighlighted(item));
+      if (firstHighlightedIndex !== -1) {
+        setTimeout(() => {
+          focusAndScrollToField(firstHighlightedIndex);
+        }, 100); // Allow UI to update before focusing
+      }
+    }
+  }, [isAutoFillComplete, highlightedFields, mainData, focusAndScrollToField, isFieldHighlighted]);
+
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (onSubmit) {
+      onSubmit(formData);
+    }
+    else if (onNext) {
+      onNext(formData);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {mainData.slice(0, visibleIndex + 1).map((item, index) => (
+        <FormField
+          key={index}
+          item={item}
+          onChange={handleFieldChange}
+          index={index}
+          formData={formData}
+          isHighlighted={isFieldHighlighted(item)}
+        />
+      ))}
+      <div className={`flex ${onPrevious ? 'justify-between' : 'justify-end'} pt-6`}>
+        {onPrevious && (
+          <Button type="button" variant="outline" onClick={onPrevious}>
+            {previousButtonText}
+          </Button>
+        )}
+        <Button type="submit" className="px-8">
+          {onSubmit ? submitButtonText : nextButtonText}
+        </Button>
+      </div>
+    </form>
+  );
+}

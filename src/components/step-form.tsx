@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/src/components/ui/button"
 import { Alert, AlertDescription } from "@/src/components/ui/alert"
@@ -8,6 +8,7 @@ import { InsuranceContractForm } from "@/src/components/insurance-contract-form"
 import { VehicleInfoForm } from "@/src/components/vehicle-info-form"
 import { PersonalInfoForm } from "@/src/components/personal-info-form"
 import { useSessionStorage } from "@/src/hooks/use-session-storage"
+import { FormDataResponse } from "../types/form-data"
 
 interface StepFormProps {
   step: number
@@ -15,88 +16,19 @@ interface StepFormProps {
 
 export function StepForm({ step }: StepFormProps) {
   const router = useRouter()
-  const { getStepData, updateStepData } = useSessionStorage()
   const [isLoading, setIsLoading] = useState(false)
   const [showAutoFillNotice, setShowAutoFillNotice] = useState(false)
-  const [initialData, setInitialData] = useState({})
   const [validationErrors, setValidationErrors] = useState<string[]>([])
-
-  useEffect(() => {
-    // ページロード時にsessionStorageからデータを取得し、自動でフォームに反映
-    const savedData = getStepData(step)
-    setInitialData(savedData)
-  }, [step, getStepData])
+  const { saveAllData, enableAutoFill } = useSessionStorage()
 
   const fetchAndAutoFillForm = async () => {
     setIsLoading(true)
-    try {
-      // 自動入力ボタンが押されたことをsessionStorageに記録
-      sessionStorage.setItem('autoFillButtonPressed', 'true')
-      // ステップごとのAPIコール
-      const response = await fetch(`/api/form-data?step=${step}`)
-      const responseData = await response.json()
-      const autoFilledData: Record<string, string | boolean | undefined> = {}
-
-      // Process each item in the response data
-      responseData.forEach((item: any, index: number) => {
-        // Handle radio buttons
-        if (item.radio && item.radio.name && item.radio.value) {
-          const fieldName = item.radio.name
-          const value = item.radio.value
-          autoFilledData[fieldName] = value
-        }
-
-        // Handle select dropdowns
-        if (item.select && item.select.selects) {
-          item.select.selects.forEach((select: any) => {
-            const fieldName = select.name || select.id
-            const value = select.value
-            if (fieldName && value) {
-              autoFilledData[fieldName] = value
-            }
-          })
-        }
-
-        // Handle checkbox
-        if (item.checkbox && item.checkbox.name && item.checkbox.value) {
-          const fieldName = item.checkbox.name
-          const value = item.checkbox.value
-          autoFilledData[fieldName] = value
-        }
-      })
-
-      // 既存のsessionStorageデータ（ユーザー入力）を取得
-      const currentData = getStepData(step)
-      
-      // ユーザーデータを優先してマージ（APIデータで上書きしない）
-      const mergedData = { ...autoFilledData, ...currentData }
-      
-      // sessionStorageに保存
-      updateStepData(step, mergedData)
-      setInitialData(mergedData)
-      setShowAutoFillNotice(true)
-
-      // 通知を3秒後に非表示
-      setTimeout(() => {
-        setShowAutoFillNotice(false)
-      }, 3000)
-
-      // 未記入項目にフォーカス（ステップ1のみ）
-      if (step === 1) {
-        setTimeout(() => {
-          const event = new CustomEvent('autoFillCompleted', { 
-            detail: { shouldFocusNextField: true, isAutoFillMode: true } 
-          })
-          window.dispatchEvent(event)
-        }, 500)
-      }
-
-    } catch (error) {
-      console.error(`Failed to fetch step ${step} data:`, error)
-      alert("APIからのデータ取得に失敗しました。")
-    } finally {
-      setIsLoading(false)
-    }
+    const response = await fetch(`/api/form-data`)
+    const responseData = await response.json() as FormDataResponse
+    // sessionに保存
+    saveAllData(responseData)
+    enableAutoFill()
+    setIsLoading(false)
   }
 
   // バリデーション関数（段階的表示対応版）
@@ -149,8 +81,6 @@ export function StepForm({ step }: StepFormProps) {
       return
     }
     
-    // データをsessionStorageに保存
-    updateStepData(step, stepData)
     
     if (step < 3) {
       // 次のステップへ遷移
@@ -167,9 +97,6 @@ export function StepForm({ step }: StepFormProps) {
       // エラーがある場合は処理を停止
       return
     }
-    
-    // 最終ステップのデータを保存
-    updateStepData(step, stepData)
     
     alert("お申し込みありがとうございます。確認メールをお送りいたします。")
     
@@ -189,27 +116,22 @@ export function StepForm({ step }: StepFormProps) {
       setValidationErrors([])
     }
   }
-
   const renderForm = () => {
     switch (step) {
       case 1:
-        return <InsuranceContractForm initialData={initialData} onNext={handleNext} onChange={handleFormChange} />
+        return <InsuranceContractForm  onNext={handleNext} />
       case 2:
         return (
           <VehicleInfoForm 
-            initialData={initialData} 
             onNext={handleNext} 
             onPrevious={handlePrevious}
-            onChange={handleFormChange}
           />
         )
       case 3:
         return (
           <PersonalInfoForm 
-            initialData={initialData} 
             onSubmit={handleSubmit} 
             onPrevious={handlePrevious}
-            onChange={handleFormChange} 
           />
         )
       default:
