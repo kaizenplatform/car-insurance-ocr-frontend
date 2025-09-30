@@ -42,7 +42,7 @@ export default function StepPage() {
 
         <Card className="shadow-lg">
           <CardHeader className="bg-blue-50 border-b">
-            <CardTitle className="text-xl text-blue-900">
+            <CardTitle className="text-xl text-blue-900 my-2">
               {STEP_TITLES[step as keyof typeof STEP_TITLES]}
             </CardTitle>
           </CardHeader>
@@ -50,10 +50,6 @@ export default function StepPage() {
             <StepForm step={step} />
           </CardContent>
         </Card>
-
-        <div className="mt-8 text-center text-sm text-gray-500">
-          <p>お客様の個人情報は適切に保護されます</p>
-        </div>
       </div>
     </div>
   )

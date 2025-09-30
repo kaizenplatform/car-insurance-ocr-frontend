@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import responseData from "@/src/data/response.json"
+import type { FormItem } from "@/src/types/form-data"
 
 // ステップごとのフィールド名パターン
 const STEP_FIELD_PATTERNS = {
@@ -21,24 +22,19 @@ function filterDataByStep(data: any[], step: number) {
   const patterns = STEP_FIELD_PATTERNS[step as keyof typeof STEP_FIELD_PATTERNS]
   if (!patterns) return []
 
-  return data.filter((item: any) => {
+  return (data as FormItem[]).filter((item) => {
     // radio フィールドをチェック
-    if (item.radio?.name) {
-      return patterns.some(pattern => item.radio.name.includes(pattern))
+    if (item.radio && item.radio.name) {
+      if (patterns.some(pattern => item.radio!.name.includes(pattern))) return true
     }
-    
     // select フィールドをチェック
-    if (item.select?.selects) {
-      return item.select.selects.some((select: any) => 
-        patterns.some(pattern => (select.name || select.id)?.includes(pattern))
-      )
+    if (item.select && item.select.selects) {
+      if (item.select.selects.some((select: any) => patterns.some(pattern => (select.name || select.id)?.includes(pattern)))) return true
     }
-    
     // checkbox フィールドをチェック
-    if (item.checkbox?.name) {
-      return patterns.some(pattern => item.checkbox.name.includes(pattern))
+    if (item.checkbox && item.checkbox.name) {
+      if (patterns.some(pattern => item.checkbox!.name.includes(pattern))) return true
     }
-    
     return false
   })
 }
@@ -52,7 +48,7 @@ export async function GET(request: Request) {
     
     if (step) {
       const stepNumber = parseInt(step)
-      const filteredData = filterDataByStep(responseData, stepNumber)
+      const filteredData: FormItem[] = filterDataByStep(responseData as FormItem[], stepNumber)
       return NextResponse.json(filteredData)
     }
     

@@ -1,0 +1,38 @@
+{
+  "data": {
+    "insuranceCompany": null,
+    "isOneYearContract": true,
+    "expiryDate": {
+      "year": 2025,
+      "month": 10,
+      "day": 5
+    },
+    "insurancePeriod": {
+      "start": {
+        "year": 2024,
+        "month": 10,
+        "day": 5
+      },
+      "end": {
+        "year": 2025,
+        "month": 10,
+        "day": 5
+      }
+    },
+    "nonFleetGrade": "11等級",
+    "accidentCoefficientPeriod": "3年",
+    "firstRegistrationYear": {
+      "year": 2006,
+      "month": 4
+    },
+    "vehicleModel": "コペン",
+    "vehicleUsage": "主に家庭用※通勤用含む",
+    "insuredPersonName": "髙橋 伊織",
+    "insuredPersonDob": {
+      "year": 2003,
+      "month": 7,
+      "day": 5
+    },
+    "licenseColor": "グリーン"
+  }
+}

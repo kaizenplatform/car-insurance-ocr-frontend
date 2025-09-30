@@ -25,7 +25,6 @@ export function StepForm({ step }: StepFormProps) {
     // ページロード時にsessionStorageからデータを取得し、自動でフォームに反映
     const savedData = getStepData(step)
     setInitialData(savedData)
-    console.log(`[StepForm] Loaded saved data for step ${step}:`, savedData)
   }, [step, getStepData])
 
   const fetchAndAutoFillForm = async () => {
@@ -33,19 +32,13 @@ export function StepForm({ step }: StepFormProps) {
     try {
       // 自動入力ボタンが押されたことをsessionStorageに記録
       sessionStorage.setItem('autoFillButtonPressed', 'true')
-      
-      console.log(`[StepForm] Fetching data for step ${step}`)
       // ステップごとのAPIコール
       const response = await fetch(`/api/form-data?step=${step}`)
       const responseData = await response.json()
-      console.log(`[StepForm] API response for step ${step}:`, responseData)
-
       const autoFilledData: Record<string, string | boolean | undefined> = {}
 
       // Process each item in the response data
       responseData.forEach((item: any, index: number) => {
-        console.log(`[StepForm] Processing item ${index}:`, item)
-
         // Handle radio buttons
         if (item.radio && item.radio.name && item.radio.value) {
           const fieldName = item.radio.name
@@ -72,15 +65,11 @@ export function StepForm({ step }: StepFormProps) {
         }
       })
 
-      console.log(`[StepForm] Auto-filled data for step ${step}:`, autoFilledData)
-      
       // 既存のsessionStorageデータ（ユーザー入力）を取得
       const currentData = getStepData(step)
-      console.log(`[StepForm] Current user data for step ${step}:`, currentData)
       
       // ユーザーデータを優先してマージ（APIデータで上書きしない）
       const mergedData = { ...autoFilledData, ...currentData }
-      console.log(`[StepForm] Merged data (user priority) for step ${step}:`, mergedData)
       
       // sessionStorageに保存
       updateStepData(step, mergedData)
@@ -113,8 +102,6 @@ export function StepForm({ step }: StepFormProps) {
   // バリデーション関数（段階的表示対応版）
   const validateStepData = (stepData: any, step: number) => {
     const errors: string[] = []
-    
-    console.log(`[StepForm] Validating step ${step} data:`, stepData)
     
     if (step !== 1) {
       // ステップ1以外は従来のバリデーション
@@ -149,24 +136,18 @@ export function StepForm({ step }: StepFormProps) {
       }
     }
     
-    console.log(`[StepForm] Validation errors for step ${step}:`, errors)
     return errors
   }
 
   const handleNext = (stepData: any) => {
-    console.log(`[StepForm] Attempting to proceed from step ${step} with data:`, stepData)
-    
     // バリデーション実行
     const errors = validateStepData(stepData, step)
     setValidationErrors(errors)
     
     if (errors.length > 0) {
       // エラーがある場合は処理を停止
-      console.log(`[StepForm] Validation failed for step ${step}:`, errors)
       return
     }
-    
-    console.log(`[StepForm] Validation passed for step ${step}, proceeding...`)
     
     // データをsessionStorageに保存
     updateStepData(step, stepData)
@@ -190,7 +171,6 @@ export function StepForm({ step }: StepFormProps) {
     // 最終ステップのデータを保存
     updateStepData(step, stepData)
     
-    console.log("Form submitted:", stepData)
     alert("お申し込みありがとうございます。確認メールをお送りいたします。")
     
     // メインページに戻る
@@ -239,22 +219,6 @@ export function StepForm({ step }: StepFormProps) {
 
   return (
     <div className="space-y-6">
-      {/* UX改善ヒント */}
-      <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
-        <div className="flex">
-          <div className="ml-3">
-            <p className="text-sm text-blue-700">
-              💡 <strong>スマート機能のご案内</strong>
-            </p>
-            <ul className="mt-2 text-xs text-blue-600 space-y-1">
-              <li>• ステップ1：回答に応じて関連項目が段階的に表示されます</li>
-              <li>• スマート入力：見えている項目のみを自動入力し、未記入項目をハイライト</li>
-              <li>• データは自動保存され、ブラウザを閉じても継続できます</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
       <div className="flex justify-center">
         <Button
           onClick={fetchAndAutoFillForm}

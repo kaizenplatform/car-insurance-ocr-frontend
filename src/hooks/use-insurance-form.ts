@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useSessionStorage } from "@/src/hooks/use-session-storage"
-import mainData from "@/src/data/main.json"
+import type { Page1 } from "@/src/types/form-data";
 
 export function useInsuranceForm(initialData?: any) {
   const { updateStepData } = useSessionStorage()
@@ -32,17 +32,13 @@ export function useInsuranceForm(initialData?: any) {
   }
 
   // Update form data and save to sessionStorage (only for manual user input)
-  const updateFormData = (key: string, value: any, isAutoFilling: boolean = false) => {
+  const updateFormData = (key: keyof Page1, value: Page1[keyof Page1], isAutoFilling: boolean = false) => {
     const updatedData = { ...formData, [key]: value }
     setFormData(updatedData)
-    console.log('[Insurance] Form data updated:', updatedData)
     
     // Only save to sessionStorage for manual user input
     if (!isAutoFilling) {
       updateStepData(1, updatedData)
-      console.log('[Insurance] User data saved to sessionStorage:', updatedData)
-    } else {
-      console.log('[Insurance] Auto-fill mode - skipping sessionStorage update')
     }
     
     return updatedData
@@ -50,7 +46,6 @@ export function useInsuranceForm(initialData?: any) {
 
   // Initialize form data when initialData changes
   useEffect(() => {
-    console.log("[Insurance] Form received new initialData:", initialData)
     setFormData(initialData || {})
   }, [initialData])
 

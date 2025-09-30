@@ -6,7 +6,7 @@ import type { FormData } from "@/src/types/form-data"
 const STORAGE_KEY = "insurance-form-data"
 
 export function useSessionStorage() {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState({
     insuranceContract: {},
     vehicleInfo: {},
     personalInfo: {},

@@ -11,8 +11,11 @@ import { Checkbox } from "@/src/components/ui/checkbox"
 import { useInsuranceForm } from "@/src/hooks/use-insurance-form"
 import { useAutoFill } from "@/src/hooks/use-auto-fill"
 import { useFocusManagement } from "@/src/hooks/use-focus-management"
-import mainData from "@/src/data/main.json"
+import page1 from "@/src/data/page1.json"
 
+import type { Page1 } from "@/src/types/form-data";
+
+const mainData = page1
 interface InsuranceContractFormProps {
   initialData?: any
   onNext: (data: any) => void
@@ -35,7 +38,6 @@ export function InsuranceContractForm({ initialData, onNext, onChange }: Insuran
     setPendingUserInput,
     shouldResumeAutoFill,
     originalAutoFillData,
-    isFieldAnswered,
     findNextUnansweredField,
     scrollToField,
     resumeAutoFillFromData,
@@ -55,8 +57,6 @@ export function InsuranceContractForm({ initialData, onNext, onChange }: Insuran
 
   // Use initialData effect
   useEffect(() => {
-    console.log("[v0] Insurance contract form received new initialData:", initialData)
-    
     // Update visible field index for initial data
     updateVisibleFieldIndex(initialData || {})
   }, [initialData])
@@ -65,7 +65,6 @@ export function InsuranceContractForm({ initialData, onNext, onChange }: Insuran
   useEffect(() => {
     const handleAutoFillCompleted = (event: CustomEvent) => {
       if (event.detail?.shouldFocusNextField && event.detail?.isAutoFillMode) {
-        console.log('[Insurance] Starting sequential auto-fill from API data...')
         startSequentialAutoFill()
       }
     }
@@ -79,29 +78,27 @@ export function InsuranceContractForm({ initialData, onNext, onChange }: Insuran
 
   // Enhanced updateFormData that handles all logic
   const updateFormData = (key: string, value: any) => {
-    const updatedData = baseUpdateFormData(key, value, isAutoFilling)
-    
+    const updatedData = baseUpdateFormData(key as keyof Page1, value, isAutoFilling);
+
     // Handle conditional fields
-    handleConditionalFields(key, value)
-    
+    handleConditionalFields(key, value);
+
     // Update visible field index and handle focus
-    updateVisibleFieldIndex(updatedData)
-    
+    updateVisibleFieldIndex(updatedData);
+
     // Handle autoFill resumption
-    const autoFillModeActive = isInAutoFillMode()
+    const autoFillModeActive = isInAutoFillMode();
     if (autoFillModeActive && !isAutoFilling && shouldResumeAutoFill && originalAutoFillData) {
-      console.log('[Insurance] User manual input during auto-fill session, checking for resume...')
       setTimeout(() => {
-        resumeAutoFillFromData(updatedData)
-      }, 1000)
+        resumeAutoFillFromData(updatedData);
+      }, 1000);
     } else if (autoFillModeActive && !isAutoFilling && !shouldResumeAutoFill && originalAutoFillData) {
-      console.log('[Insurance] AutoFill mode active but no session - starting auto-fill from original data...')
       setTimeout(() => {
-        resumeAutoFillFromData(updatedData)
-      }, 1000)
+        resumeAutoFillFromData(updatedData);
+      }, 1000);
     }
-    
-    onChange?.()
+
+    onChange?.();
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -214,16 +211,6 @@ export function InsuranceContractForm({ initialData, onNext, onChange }: Insuran
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* 進捗ヒント */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-        <p className="text-sm text-blue-600">
-          📝 質問に順次回答いただくと、次の関連項目が自動的に表示されます
-        </p>
-        <p className="text-xs text-blue-500 mt-1">
-          既に保存されたデータがある場合は、自動的に復元されます
-        </p>
-      </div>
-
       {mainData.map((item, index) => renderField(item, index))}
 
       {/* 完了項目数の表示 */}
