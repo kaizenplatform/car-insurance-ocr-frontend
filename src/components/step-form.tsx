@@ -9,7 +9,6 @@ import { InsuranceContractForm } from "@/src/components/insurance-contract-form"
 import { VehicleInfoForm } from "@/src/components/vehicle-info-form"
 import { PersonalInfoForm } from "@/src/components/personal-info-form"
 import { useSessionStorage } from "@/src/hooks/use-session-storage"
-import { FormDataResponse } from "../types/form-data"
 
 interface StepFormProps {
   step: number
