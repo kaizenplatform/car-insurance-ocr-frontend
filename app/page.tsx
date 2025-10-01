@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card"
 import { Button } from "@/src/components/ui/button"
-
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">

@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
 import responseData from "@/src/data/response.json"
-import type { FormItem } from "@/src/types/form-data"
 
 export async function POST(request: Request) {
   try {

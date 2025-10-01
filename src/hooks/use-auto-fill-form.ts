@@ -10,16 +10,21 @@ interface AutoFillItem {
 export function useAutoFillForm(
   formStructure: FormItem[] | null,
   formValues: Record<string, any> | null,
-  onChange: (key: string, value: any, options?: { autoFilling?: boolean }) => void
+  onChange: (key: string, value: any, options?: { autoFilling?: boolean }) => void,
+  onAutoFillComplete?: () => void
 ) {
   const [isAutoFilling, setIsAutoFilling] = useState(false);
   const [isAutoFillComplete, setIsAutoFillComplete] = useState(false);
   const [autoFillQueue, setAutoFillQueue] = useState<AutoFillItem[]>([]);
   const onChangeRef = useRef(onChange);
+  const onAutoFillCompleteRef = useRef(onAutoFillComplete);
 
   useEffect(() => {
     onChangeRef.current = onChange;
   }, [onChange]);
+  useEffect(() => {
+    onAutoFillCompleteRef.current = onAutoFillComplete;
+  }, [onAutoFillComplete]);
 
   const focusAndScrollToField = useCallback((fieldIndex: number) => {
     const el = document.querySelector(
@@ -71,6 +76,9 @@ export function useAutoFillForm(
       setIsAutoFillComplete(false);
     } else {
       setIsAutoFillComplete(true);
+      if (onAutoFillCompleteRef.current) {
+        onAutoFillCompleteRef.current();
+      }
     }
   };
 
@@ -81,6 +89,9 @@ export function useAutoFillForm(
           setIsAutoFilling(false);
           setAutoFillQueue([]);
           setIsAutoFillComplete(true);
+          if (onAutoFillCompleteRef.current) {
+            onAutoFillCompleteRef.current();
+          }
           return;
         }
 

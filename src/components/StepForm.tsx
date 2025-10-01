@@ -1,4 +1,5 @@
 import { useMemo, useEffect } from "react";
+import { useToast } from "../hooks/use-toast";
 import { Button } from "@/src/components/ui/button";
 import { FormItem } from "../types/form-data";
 import { useFormVisibility } from "../hooks/use-form-visibility";
@@ -52,10 +53,18 @@ export function StepForm({
     }, {});
   }, [stepDataValues, autoFillEnabled]);
 
+  const { toast } = useToast();
   const { isAutoFilling, isAutoFillComplete, focusAndScrollToField } = useAutoFillForm(
     autoFillEnabled ? mainData : null,
     formValuesObject,
-    handleFieldChange
+    handleFieldChange,
+    () => {
+      toast({
+        title: "自動入力が完了しました",
+        description: "APIから取得した内容でフォームが自動入力されました。",
+        duration: 3000,
+      });
+    }
   );
 
   const highlightedFields = useAutoFillHighlight(
@@ -111,7 +120,7 @@ export function StepForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {mainData.slice(0, visibleIndex + 1).map((item, index) => (
+      {mainData.map((item, index) => (
         <FormField
           key={index}
           item={item}
