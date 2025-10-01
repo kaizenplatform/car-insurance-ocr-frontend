@@ -61,8 +61,8 @@ export function StepForm({
     () => {
       toast({
         title: "自動入力が完了しました",
-        description: "APIから取得した内容でフォームが自動入力されました。",
-        duration: 3000,
+        description: "画像の内容をもとにフォームが自動入力されました。残りの項目を入力してください。",
+        duration: 4000,
       });
     }
   );
