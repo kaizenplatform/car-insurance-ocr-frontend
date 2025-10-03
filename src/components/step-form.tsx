@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ImageUploadModal } from "@/src/components/ImageUploadModal"
 import { useRouter } from "next/navigation"
 import { Button } from "@/src/components/ui/button"
@@ -15,12 +15,21 @@ interface StepFormProps {
 }
 
 export function StepForm({ step }: StepFormProps) {
+    // step:1の時に初回レンダリングでセッションをクリア
+
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [showImageModal, setShowImageModal] = useState(false)
   const [showAutoFillNotice, setShowAutoFillNotice] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
-  const { saveAllData, enableAutoFill } = useSessionStorage()
+  const { saveAllData, enableAutoFill, clearSessionData } = useSessionStorage()
+
+  useEffect(() => {
+    if (step === 1) {
+      clearSessionData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
 
   // 画像アップロード後のAPIモックPOST
   const handleImageUpload = async (file: File) => {
@@ -121,12 +130,6 @@ export function StepForm({ step }: StepFormProps) {
     }
   }
 
-  const handleFormChange = () => {
-    // フォームが変更されたらバリデーションエラーをクリア
-    if (validationErrors.length > 0) {
-      setValidationErrors([])
-    }
-  }
   const renderForm = () => {
     switch (step) {
       case 1:

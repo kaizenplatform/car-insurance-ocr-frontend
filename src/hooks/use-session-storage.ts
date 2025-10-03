@@ -81,11 +81,26 @@ export function useSessionStorage() {
     }
   }
 
+  const clearSessionData = () => {
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem(STORAGE_KEY);
+      sessionStorage.removeItem(AUTO_FILL_FLAG);
+      dispatchUpdateEvent();
+      setFormData({
+        insuranceContract: {},
+        vehicleInfo: {},
+        personalInfo: {},
+      });
+      setAutoFillEnabled(false);
+    }
+  }
+
   return {
     formData,
     saveAllData,
     getStepData,
     isAutoFillEnabled,
     enableAutoFill,
+    clearSessionData,
   }
 }
