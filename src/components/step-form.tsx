@@ -22,17 +22,16 @@ export function StepForm({ step }: StepFormProps) {
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const { saveAllData, enableAutoFill } = useSessionStorage()
 
-  // 画像アップロード後のAPIモックPOST
+  // 画像アップロード後のAPI POST（FormDataで送信）
   const handleImageUpload = async (file: File) => {
-    // 実際のアップロードはモック
     await new Promise(res => setTimeout(res, 1000));
-    // モックAPI: /api/form-data
+    const formData = new FormData();
+    formData.append("file", file);
     const res = await fetch("/api/form-data", {
       method: "POST",
-      body: file,
+      body: formData,
     });
     console.log(res);
-    // レスポンスとしてresponse.jsonを返す
     saveAllData(await res.json());
     enableAutoFill();
     setShowAutoFillNotice(true);

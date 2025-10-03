@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
-import responseData from "@/src/data/response.json"
 import type { FormItem } from "@/src/types/form-data"
+import { transformInsurancePolicy } from "@/src/lib/transform-insurance-policy"
 
 // ステップごとのフィールド名パターン
 const STEP_FIELD_PATTERNS = {
@@ -11,27 +11,23 @@ const STEP_FIELD_PATTERNS = {
     "sltBprefcl"
   ],
   2: [
-    "radBvehtyp", "radCommuse", "lstRgstdtegy", "lstRgstdtem"
+    "radBvehtyp", "vehicleName", "radCommuse", "lstRgstdtegy", "lstRgstdtem"
   ],
   3: [
     "radBinslbzkc", "sltBinslbdoby", "sltBinslbdobm", "sltBinslbdobd"
   ]
 }
 
-function filterDataByStep(data: any[], step: number) {
+function filterDataByStep(data: FormItem[], step: number): FormItem[] {
   const patterns = STEP_FIELD_PATTERNS[step as keyof typeof STEP_FIELD_PATTERNS]
   if (!patterns) return []
-
-  return (data as FormItem[]).filter((item) => {
-    // radio フィールドをチェック
+  return data.filter((item) => {
     if (item.radio && item.radio.name) {
       if (patterns.some(pattern => item.radio!.name.includes(pattern))) return true
     }
-    // select フィールドをチェック
     if (item.select && item.select.selects) {
       if (item.select.selects.some((select: any) => patterns.some(pattern => (select.name || select.id)?.includes(pattern)))) return true
     }
-    // checkbox フィールドをチェック
     if (item.checkbox && item.checkbox.name) {
       if (patterns.some(pattern => item.checkbox!.name.includes(pattern))) return true
     }
@@ -41,17 +37,45 @@ function filterDataByStep(data: any[], step: number) {
 
 export async function POST(request: Request) {
   try {
-    // 画像ファイル受け取り（モック）
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    // すべてのステップのデータを結合して返す
-    const allStepsData = {
-      step1: filterDataByStep(responseData as FormItem[], 1),
-      step2: filterDataByStep(responseData as FormItem[], 2),
-      step3: filterDataByStep(responseData as FormItem[], 3),
+    // 画像ファイル受け取り
+    const formData = await request.formData();
+    const file = formData.get("file");
+    if (!file || !(file instanceof Blob)) {
+      return NextResponse.json({ error: "画像ファイルがありません" }, { status: 400 });
     }
 
-    return NextResponse.json(allStepsData)
+    // OCR APIのURLを環境変数から取得
+    const ocrApiUrl = process.env.OCR_API_URL;
+    if (!ocrApiUrl) {
+      return NextResponse.json({ error: "OCR APIのURLが未設定です" }, { status: 500 });
+    }
+    // OCR APIへリクエスト
+    const ocrRes = await fetch(ocrApiUrl, {
+      method: "POST",
+      body: (() => {
+        const fd = new FormData();
+        fd.append("file", file);
+        return fd;
+      })(),
+    });
+    if (!ocrRes.ok) {
+      return NextResponse.json({ error: "OCR APIリクエスト失敗" }, { status: 502 });
+    }
+    const ocrJson = await ocrRes.json();
+
+    // InsurancePolicy型に変換（APIレスポンスが型に合致している前提）
+    const policy = ocrJson.data;
+    // response.json形式に変換
+    const items: FormItem[] = transformInsurancePolicy(policy);
+
+    // ステップごとに分割
+    const allStepsData = {
+      step1: filterDataByStep(items, 1),
+      step2: filterDataByStep(items, 2),
+      step3: filterDataByStep(items, 3),
+    };
+
+    return NextResponse.json(allStepsData);
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch form data" }, { status: 500 });
   }
