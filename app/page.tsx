@@ -19,7 +19,7 @@ export default function HomePage() {
                 お見積もりを開始する
               </CardTitle>
             </CardHeader>
-            <CardContent className="text-center p-6">
+            <CardContent className="text-center p-6 flex flex-col space-y-4">
               <p className="text-gray-600 mb-6">
                 現在の契約状況や車両情報、個人情報を順番に入力していただきます。<br />
                 途中で離脱されても、入力内容は自動保存されます。
@@ -27,6 +27,11 @@ export default function HomePage() {
               <Link href="/step/1">
                 <Button size="lg" className="w-full">
                   見積もり開始
+                </Button>
+              </Link>
+              <Link href="/pop-step/1">
+                <Button size="lg" className="w-full">
+                  見積もり開始(pop step型)
                 </Button>
               </Link>
             </CardContent>
