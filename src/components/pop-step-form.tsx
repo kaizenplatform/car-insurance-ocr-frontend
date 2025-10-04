@@ -13,9 +13,10 @@ import { PopStepFormContent } from "./PopStepFormContent"
 
 interface StepFormProps {
   step: number
+  enableAutoFillDelay?: boolean
 }
 
-export function PopStepForm({ step }: StepFormProps) {
+export function PopStepForm({ step, enableAutoFillDelay = false }: StepFormProps) {
     // step:1の時に初回レンダリングでセッションをクリア
 
   const router = useRouter()
@@ -134,7 +135,7 @@ export function PopStepForm({ step }: StepFormProps) {
   const renderForm = () => {
     switch (step) {
       case 1:
-        return <PopStepFormContent mainData={page1} stepNumber={1} onNext={handleNext} />
+        return <PopStepFormContent mainData={page1} stepNumber={1} onNext={handleNext} enableAutoFillDelay={enableAutoFillDelay} />
       case 2:
         return (
           <PopStepFormContent
@@ -142,6 +143,7 @@ export function PopStepForm({ step }: StepFormProps) {
             stepNumber={2}
             onNext={handleNext}
             onPrevious={handlePrevious}
+            enableAutoFillDelay={enableAutoFillDelay}
           />
         )
       case 3:
@@ -151,6 +153,7 @@ export function PopStepForm({ step }: StepFormProps) {
             stepNumber={3}
             onPrevious={handlePrevious}
             submitButtonText="見積もりを取得する"
+            enableAutoFillDelay={enableAutoFillDelay}
           />
         )
       default:

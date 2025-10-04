@@ -11,7 +11,8 @@ export function useAutoFillForm(
   formStructure: FormItem[] | null,
   formValues: Record<string, any> | null,
   onChange: (key: string, value: any, options?: { autoFilling?: boolean }) => void,
-  onAutoFillComplete?: () => void
+  onAutoFillComplete?: () => void,
+  enableDelay: boolean = true
 ) {
   const [isAutoFilling, setIsAutoFilling] = useState(false);
   const [isAutoFillComplete, setIsAutoFillComplete] = useState(false);
@@ -99,14 +100,18 @@ export function useAutoFillForm(
         focusAndScrollToField(currentItem.fieldIndex);
         onChangeRef.current(currentItem.key, currentItem.value, { autoFilling: true });
 
-        setTimeout(() => {
+        if (enableDelay) {
+          setTimeout(() => {
+            processQueue(index + 1);
+          }, 300);
+        } else {
           processQueue(index + 1);
-        }, 300);
+        }
       };
 
       processQueue(0);
     }
-  }, [isAutoFilling, autoFillQueue, focusAndScrollToField]);
+  }, [isAutoFilling, autoFillQueue, focusAndScrollToField, enableDelay]);
 
   useEffect(() => {
     if (formStructure && formValues && !isAutoFilling && autoFillQueue.length === 0) {
