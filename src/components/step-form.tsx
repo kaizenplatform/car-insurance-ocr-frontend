@@ -33,6 +33,13 @@ export function StepForm({ step, enableAutoFillDelay = true }: StepFormProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
+  useEffect(() => {
+    if (step === 1) {
+      clearSessionData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
+
   // 画像アップロード後のAPI POST（FormDataで送信）
   const handleImageUpload = async (file: File) => {
     try {
