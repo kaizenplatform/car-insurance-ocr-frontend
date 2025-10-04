@@ -106,7 +106,7 @@ export function PopStepForm({ step, enableAutoFillDelay = false }: StepFormProps
     
     if (step < 3) {
       // 次のステップへ遷移
-      router.push(`/step/${step + 1}`)
+      router.push(`/pop-step/${step + 1}`)
     }
   }
 
@@ -128,7 +128,7 @@ export function PopStepForm({ step, enableAutoFillDelay = false }: StepFormProps
 
   const handlePrevious = () => {
     if (step > 1) {
-      router.push(`/step/${step - 1}`)
+      router.push(`/pop-step/${step - 1}`)
     }
   }
 

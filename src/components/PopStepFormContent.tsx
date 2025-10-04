@@ -87,6 +87,16 @@ export function PopStepFormContent({
     return keys.some(key => highlightedFields.has(key));
   };
 
+  // Handle focus for manual input in pop-step (one question at a time)
+  // Only activate focus after autofill is enabled
+  useEffect(() => {
+    if (autoFillEnabled && !isAutoFilling && visibleIndex < mainData.length) {
+      // Use setTimeout to ensure focus logic runs after DOM update
+      setTimeout(() => {
+        focusAndScrollToField(visibleIndex);
+      }, 100);
+    }
+  }, [visibleIndex, isAutoFilling, focusAndScrollToField, mainData.length, autoFillEnabled]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
