@@ -36,13 +36,9 @@ export function PopStepForm({ step, enableAutoFillDelay = false }: StepFormProps
   // 画像アップロード後のAPIモックPOST
   const handleImageUpload = async (file: File) => {
     try {
-      // 実際のアップロードはモック
-      await new Promise(res => setTimeout(res, 1000));
-      
       const formData = new FormData();
       formData.append("file", file);
       
-      // モックAPI: /api/form-data
       const res = await fetch("/api/form-data", {
         method: "POST",
         body: formData,
@@ -60,7 +56,6 @@ export function PopStepForm({ step, enableAutoFillDelay = false }: StepFormProps
       const data = await res.json();
       console.log("Response data:", data);
       
-      // レスポンスとしてresponse.jsonを返す
       saveAllData(data);
       enableAutoFill();
       setShowAutoFillNotice(true);

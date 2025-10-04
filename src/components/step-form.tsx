@@ -43,7 +43,6 @@ export function StepForm({ step, enableAutoFillDelay = true }: StepFormProps) {
   // 画像アップロード後のAPI POST（FormDataで送信）
   const handleImageUpload = async (file: File) => {
     try {
-      await new Promise(res => setTimeout(res, 1000));
       const formData = new FormData();
       formData.append("file", file);
       
