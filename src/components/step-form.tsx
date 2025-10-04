@@ -35,17 +35,35 @@ export function StepForm({ step, enableAutoFillDelay = true }: StepFormProps) {
 
   // 画像アップロード後のAPI POST（FormDataで送信）
   const handleImageUpload = async (file: File) => {
-    await new Promise(res => setTimeout(res, 1000));
-    const formData = new FormData();
-    formData.append("file", file);
-    const res = await fetch("/api/form-data", {
-      method: "POST",
-      body: formData,
-    });
-    console.log(res);
-    saveAllData(await res.json());
-    enableAutoFill();
-    setShowAutoFillNotice(true);
+    try {
+      await new Promise(res => setTimeout(res, 1000));
+      const formData = new FormData();
+      formData.append("file", file);
+      
+      const res = await fetch("/api/form-data", {
+        method: "POST",
+        body: formData,
+      });
+      
+      console.log("Response status:", res.status);
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("API Error:", errorData);
+        alert(`エラーが発生しました: ${errorData.error}\n詳細: ${errorData.details || ''}`);
+        return;
+      }
+      
+      const data = await res.json();
+      console.log("Response data:", data);
+      
+      saveAllData(data);
+      enableAutoFill();
+      setShowAutoFillNotice(true);
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert(`アップロードエラー: ${error instanceof Error ? error.message : String(error)}`);
+    }
   };
 
   const fetchAndAutoFillForm = async () => {

@@ -59,14 +59,23 @@ export async function POST(request: Request) {
       })(),
     });
     if (!ocrRes.ok) {
-      return NextResponse.json({ error: "OCR APIリクエスト失敗" }, { status: 502 });
+      const errorText = await ocrRes.text();
+      console.error("OCR API error:", ocrRes.status, errorText);
+      return NextResponse.json({ 
+        error: "OCR APIリクエスト失敗",
+        status: ocrRes.status,
+        details: errorText
+      }, { status: 502 });
     }
     const ocrJson = await ocrRes.json();
+    console.log("OCR API response:", ocrJson);
 
     // InsurancePolicy型に変換（APIレスポンスが型に合致している前提）
     const policy = ocrJson.data;
+    console.log("Policy data:", policy);
     // response.json形式に変換
     const items: FormItem[] = transformInsurancePolicy(policy);
+    console.log("Transformed items:", items);
 
     // ステップごとに分割
     const allStepsData = {
@@ -77,6 +86,11 @@ export async function POST(request: Request) {
 
     return NextResponse.json(allStepsData);
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch form data" }, { status: 500 });
+    console.error("Form data API error:", error);
+    return NextResponse.json({ 
+      error: "Failed to fetch form data",
+      details: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    }, { status: 500 });
   }
 }
