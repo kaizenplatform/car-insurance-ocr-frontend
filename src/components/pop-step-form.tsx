@@ -9,13 +9,13 @@ import { useSessionStorage } from "@/src/hooks/use-session-storage"
 import page1 from "@/src/data/page1.json";
 import page2 from "@/src/data/page2.json";
 import page3 from "@/src/data/page3.json";
-import { StepFormContent } from "./StepFormContent"
+import { PopStepFormContent } from "./PopStepFormContent"
 
 interface StepFormProps {
   step: number
 }
 
-export function StepForm({ step }: StepFormProps) {
+export function PopStepForm({ step }: StepFormProps) {
     // step:1の時に初回レンダリングでセッションをクリア
 
   const router = useRouter()
@@ -134,10 +134,10 @@ export function StepForm({ step }: StepFormProps) {
   const renderForm = () => {
     switch (step) {
       case 1:
-        return <StepFormContent mainData={page1} stepNumber={1} onNext={handleNext} />
+        return <PopStepFormContent mainData={page1} stepNumber={1} onNext={handleNext} />
       case 2:
         return (
-          <StepFormContent
+          <PopStepFormContent
             mainData={page2}
             stepNumber={2}
             onNext={handleNext}
@@ -146,7 +146,7 @@ export function StepForm({ step }: StepFormProps) {
         )
       case 3:
         return (
-          <StepFormContent
+          <PopStepFormContent
             mainData={page3}
             stepNumber={3}
             onPrevious={handlePrevious}

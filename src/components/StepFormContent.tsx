@@ -19,7 +19,7 @@ interface StepFormProps {
   submitButtonText?: string;
 }
 
-export function StepForm({
+export function StepFormContent({
   mainData,
   stepNumber,
   onNext,
