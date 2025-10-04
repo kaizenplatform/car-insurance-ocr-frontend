@@ -17,6 +17,7 @@ interface StepFormProps {
   nextButtonText?: string;
   previousButtonText?: string;
   submitButtonText?: string;
+  enableAutoFillDelay?: boolean;
 }
 
 export function PopStepFormContent({
@@ -28,6 +29,7 @@ export function PopStepFormContent({
   nextButtonText = "次へ進む",
   previousButtonText = "前に戻る",
   submitButtonText = "見積もりを取得する",
+  enableAutoFillDelay = false,
 }: StepFormProps) {
   const { visibleIndex, formData, handleFieldChange } = useFormVisibility(mainData);
   const { isAutoFillEnabled, getStepData } = useSessionStorage();
@@ -64,7 +66,8 @@ export function PopStepFormContent({
         description: "画像の内容をもとにフォームが自動入力されました。残りの項目を入力してください。",
         duration: 4000,
       });
-    }
+    },
+    enableAutoFillDelay
   );
 
   const highlightedFields = useAutoFillHighlight(
@@ -72,17 +75,6 @@ export function PopStepFormContent({
     formData,
     isAutoFillComplete
   );
-
-  // Handle focus for manual input
-  useEffect(() => {
-    if (!isAutoFilling && visibleIndex < mainData.length) {
-      // Use setTimeout to ensure focus logic runs after DOM update
-      setTimeout(() => {
-        focusAndScrollToField(visibleIndex);
-      }, 0);
-    }
-  }, [visibleIndex, isAutoFilling, focusAndScrollToField, mainData.length]);
-
 
   const isFieldHighlighted = (item: FormItem): boolean => {
     const keys: string[] = [];
@@ -94,18 +86,6 @@ export function PopStepFormContent({
     }
     return keys.some(key => highlightedFields.has(key));
   };
-
-  // Handle focus for auto-fill completion
-  useEffect(() => {
-    if (isAutoFillComplete && highlightedFields.size > 0) {
-      const firstHighlightedIndex = mainData.findIndex(item => isFieldHighlighted(item));
-      if (firstHighlightedIndex !== -1) {
-        setTimeout(() => {
-          focusAndScrollToField(firstHighlightedIndex);
-        }, 100); // Allow UI to update before focusing
-      }
-    }
-  }, [isAutoFillComplete, highlightedFields, mainData, focusAndScrollToField, isFieldHighlighted]);
 
 
   const handleSubmit = (e: React.FormEvent) => {

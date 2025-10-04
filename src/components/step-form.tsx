@@ -13,9 +13,10 @@ import { StepFormContent } from "./StepFormContent"
 
 interface StepFormProps {
   step: number
+  enableAutoFillDelay?: boolean
 }
 
-export function StepForm({ step }: StepFormProps) {
+export function StepForm({ step, enableAutoFillDelay = true }: StepFormProps) {
     // step:1の時に初回レンダリングでセッションをクリア
 
   const router = useRouter()
@@ -133,7 +134,7 @@ export function StepForm({ step }: StepFormProps) {
   const renderForm = () => {
     switch (step) {
       case 1:
-        return <StepFormContent mainData={page1} stepNumber={1} onNext={handleNext} />
+        return <StepFormContent mainData={page1} stepNumber={1} onNext={handleNext} enableAutoFillDelay={enableAutoFillDelay} />
       case 2:
         return (
           <StepFormContent
@@ -141,6 +142,7 @@ export function StepForm({ step }: StepFormProps) {
             stepNumber={2}
             onNext={handleNext}
             onPrevious={handlePrevious}
+            enableAutoFillDelay={enableAutoFillDelay}
           />
         )
       case 3:
@@ -150,6 +152,7 @@ export function StepForm({ step }: StepFormProps) {
             stepNumber={3}
             onPrevious={handlePrevious}
             submitButtonText="見積もりを取得する"
+            enableAutoFillDelay={enableAutoFillDelay}
           />
         )
       default:

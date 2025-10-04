@@ -47,7 +47,7 @@ export default function StepPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6 min-h-0">
-            <PopStepForm step={step} />
+            <PopStepForm step={step} enableAutoFillDelay={true} />
           </CardContent>
         </Card>
       </div>
