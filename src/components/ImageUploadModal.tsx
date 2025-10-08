@@ -22,14 +22,22 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({ open, onClos
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setSelectedFile(e.target.files[0]);
+      const file = e.target.files[0];
+      // ファイルタイプをチェック
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
+      if (!validTypes.includes(file.type)) {
+        setError("画像ファイル（JPEG, PNG, GIF, WebP）またはPDFファイルを選択してください。");
+        setSelectedFile(null);
+        return;
+      }
+      setSelectedFile(file);
       setError(null);
     }
   };
 
   const handleUpload = async () => {
     if (!selectedFile) {
-      setError("画像ファイルを選択してください。");
+      setError("画像またはPDFファイルを選択してください。");
       return;
     }
     setIsUploading(true);
@@ -49,17 +57,17 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({ open, onClos
       <DialogContent className="max-w-md mx-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-lg font-bold">
-            <FaFileImage className="text-blue-500 text-xl" /> 保険証券画像アップロード
+            <FaFileImage className="text-blue-500 text-xl" /> 保険証券アップロード
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-2">
           <label htmlFor="insurance-upload" className="flex flex-col items-center justify-center border-2 border-dashed border-blue-300 rounded-lg p-6 cursor-pointer hover:bg-blue-50 transition">
             <FaFileImage className="text-3xl text-blue-400 mb-2" />
-            <span className="text-blue-700 font-medium">画像ファイルを選択</span>
+            <span className="text-blue-700 font-medium">画像またはPDFファイルを選択</span>
             <input
               id="insurance-upload"
               type="file"
-              accept="image/*"
+              accept="image/*,application/pdf"
               ref={fileInputRef}
               onChange={handleFileChange}
               disabled={isUploading}
