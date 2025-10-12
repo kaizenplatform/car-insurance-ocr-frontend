@@ -136,10 +136,8 @@ export function PopStepForm({ step, enableAutoFillDelay = false }: StepFormProps
       return
     }
     
-    alert("お申し込みありがとうございます。確認メールをお送りいたします。")
-    
     // メインページに戻る
-    router.push("/")
+    router.push("/complete")
   }
 
   const handlePrevious = () => {
@@ -170,6 +168,7 @@ export function PopStepForm({ step, enableAutoFillDelay = false }: StepFormProps
             onPrevious={handlePrevious}
             submitButtonText="見積もりを取得する"
             enableAutoFillDelay={enableAutoFillDelay}
+            onSubmit={handleSubmit}
           />
         )
       default:
