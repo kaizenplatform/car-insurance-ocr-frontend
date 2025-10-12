@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { ImageUploadModal } from "@/src/components/ImageUploadModal"
+import AutoDismissPopup from "@/src/components/ui/AutoDismissPopup"
 import { useRouter } from "next/navigation"
 import { Button } from "@/src/components/ui/button"
 import { Alert, AlertDescription } from "@/src/components/ui/alert"
@@ -213,13 +214,7 @@ export function StepForm({ step, enableAutoFillDelay = true }: StepFormProps) {
         onUpload={handleImageUpload}
       />
 
-      {showAutoFillNotice && (
-        <Alert className="bg-blue-50 border-blue-200">
-          <AlertDescription className="text-blue-800">
-            ✅ ステップ{step}に画像読み込みから追加データが入力されました！
-          </AlertDescription>
-        </Alert>
-      )}
+      {/* Global popup (PopupProvider) will show loading/completion states. */}
 
       {validationErrors.length > 0 && (
         <Alert className="bg-red-50 border-red-200">

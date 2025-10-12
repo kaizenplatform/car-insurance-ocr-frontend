@@ -1,5 +1,6 @@
 import { useMemo, useEffect } from "react";
 import { useToast } from "../hooks/use-toast";
+import { usePopup } from "@/src/components/ui/popup";
 import { Button } from "@/src/components/ui/button";
 import { FormItem } from "../types/form-data";
 import { useFormVisibility } from "../hooks/use-form-visibility";
@@ -56,19 +57,25 @@ export function PopStepFormContent({
   }, [stepDataValues, autoFillEnabled]);
 
   const { toast } = useToast();
+  const { showLoading, showCompletion } = usePopup();
   const { isAutoFilling, isAutoFillComplete, focusAndScrollToField } = useAutoFillForm(
     autoFillEnabled ? mainData : null,
     formValuesObject,
     handleFieldChange,
     () => {
-      toast({
+      showCompletion({
         title: "自動入力が完了しました",
         description: "画像の内容をもとにフォームが自動入力されました。残りの項目を入力してください。",
-        duration: 4000,
       });
     },
     enableAutoFillDelay
   );
+
+  useEffect(() => {
+    if (isAutoFilling) {
+      showLoading({ title: "自動入力中...", description: "画像を解析してフォームに入力しています" });
+    }
+  }, [isAutoFilling, showLoading]);
 
   const highlightedFields = useAutoFillHighlight(
     mainData,
