@@ -43,6 +43,7 @@ export function transformApiResponse() {
     "contentsform:sltBinslbdoby":  `平成${licenseData.birthDate.year - 1988}(${licenseData.birthDate.year})年`,
     "contentsform:sltBinslbdobm": `${licenseData.birthDate.month}月`,
     "contentsform:sltBinslbdobd": `${licenseData.birthDate.day}日`,
+    "contentsform:radBlicensecol": licenseData.licenseColor ?? "その他",
   };
 
   return {
