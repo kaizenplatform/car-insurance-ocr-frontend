@@ -186,16 +186,27 @@ export function StepForm({ step, enableAutoFillDelay = true }: StepFormProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-center">
-        <Button
-          onClick={fetchAndAutoFillForm}
-          disabled={isLoading}
-          variant="outline"
-          className="bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
-        >
-          {isLoading ? "データ取得中..." : "保険証券画像からデータを取得"}
-        </Button>
-      </div>
+      {step === 1 && (
+        <>
+          <div className="fixed bottom-1 left-1/2 transform -translate-x-1/2 w-full max-w-md px-4 z-50">
+            <Button
+              onClick={fetchAndAutoFillForm}
+              disabled={isLoading}
+              className={`w-full py-6 gap-0 shadow-lg text-white flex flex-col items-center justify-center tracking-tight ${isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:from-purple-600 hover:to-blue-600'}`}
+              style={{ backgroundImage: 'linear-gradient(90deg, #7c3aed, #2563eb)' }}
+            >
+              {isLoading ? (
+                <span className="text-sm font-medium tracking-tight leading-tight">データ取得中...</span>
+              ) : (
+                <>
+                  <span className="text-xs tracking-tight leading-tight">\入力時間を70%短縮/</span>
+                  <span className="text-base font-bold mt-0.5 tracking-tight leading-tight">保険証券の画像を使って自動入力</span>
+                </>
+              )}
+            </Button>
+          </div>
+        </>
+      )}
       <ImageUploadModal
         open={showImageModal}
         onClose={() => setShowImageModal(false)}
