@@ -73,6 +73,7 @@ export interface Page3 {
   "contentsform:sltBinslbdoby"?: string;
   "contentsform:sltBinslbdobm"?: string;
   "contentsform:sltBinslbdobd"?: string;
+  "contentsform:radBlicensecol"?: string;
 }
 
 export interface FormDataResponse {

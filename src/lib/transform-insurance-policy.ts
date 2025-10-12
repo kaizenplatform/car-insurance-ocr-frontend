@@ -206,10 +206,10 @@ export function transformInsurancePolicy(policy: InsurancePolicy): FormItem[] {
       }
     },
     {
-      question: "免許証の色をご選択ください。",
+      question: "主にお車を使用される方（記名被保険者）の運転免許証の色をご選択ください。",
       radio: {
         type: "radio",
-        name: "contentsform:licenseColor",
+        name: "contentsform:radBlicensecol",
         value: policy.licenseColor ?? ""
       }
     }

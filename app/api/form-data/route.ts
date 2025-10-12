@@ -14,7 +14,7 @@ const STEP_FIELD_PATTERNS = {
     "radBvehtyp", "vehicleName", "radCommuse", "lstRgstdtegy", "lstRgstdtem"
   ],
   3: [
-    "radBinslbzkc", "sltBinslbdoby", "sltBinslbdobm", "sltBinslbdobd"
+    "radBinslbzkc", "sltBinslbdoby", "sltBinslbdobm", "sltBinslbdobd", "radBlicensecol"
   ]
 }
 
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
     const policy = ocrJson.data;
     console.log("Policy data:", policy);
     // response.json形式に変換
-    const items: FormItem[] = transformInsurancePolicy(policy);
+    const items: FormItem[] = transformInsurancePolicy(policy.data);
     console.log("Transformed items:", items);
 
     // ステップごとに分割
