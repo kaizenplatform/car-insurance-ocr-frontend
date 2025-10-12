@@ -7,6 +7,7 @@ type PopupOptions = {
   title?: string;
   description?: string;
   duration?: number; // ms
+  spinner?: boolean;
 }
 
 type PopupContextValue = {
@@ -48,6 +49,7 @@ export function PopupProvider({ children }: { children: React.ReactNode }) {
         duration={options.duration ?? 3000}
         title={options.title ?? "完了"}
         description={options.description ?? "処理が完了しました"}
+        spinner={options.spinner ?? false}
         onClose={handleClose}
       />
     </PopupContext.Provider>

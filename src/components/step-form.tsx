@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { ImageUploadModal } from "@/src/components/ImageUploadModal"
-import AutoDismissPopup from "@/src/components/ui/AutoDismissPopup"
 import { useRouter } from "next/navigation"
 import { Button } from "@/src/components/ui/button"
 import { Alert, AlertDescription } from "@/src/components/ui/alert"

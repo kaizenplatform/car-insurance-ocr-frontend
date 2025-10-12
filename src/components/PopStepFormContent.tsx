@@ -73,7 +73,7 @@ export function PopStepFormContent({
 
   useEffect(() => {
     if (isAutoFilling) {
-      showLoading({ title: "自動入力中...", description: "画像を解析してフォームに入力しています" });
+      showLoading({ title: "自動入力中...", description: "画像を解析してフォームに入力しています", spinner: true });
     }
   }, [isAutoFilling, showLoading]);
 
