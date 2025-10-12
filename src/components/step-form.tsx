@@ -33,20 +33,43 @@ export function StepForm({ step, enableAutoFillDelay = true }: StepFormProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
-  // 画像アップロード後のAPIモックPOST
+  useEffect(() => {
+    if (step === 1) {
+      clearSessionData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
+
+  // 画像アップロード後のAPI POST（FormDataで送信）
   const handleImageUpload = async (file: File) => {
-    // 実際のアップロードはモック
-    await new Promise(res => setTimeout(res, 1000));
-    // モックAPI: /api/form-data
-    const res = await fetch("/api/form-data", {
-      method: "POST",
-      body: file,
-    });
-    console.log(res);
-    // レスポンスとしてresponse.jsonを返す
-    saveAllData(await res.json());
-    enableAutoFill();
-    setShowAutoFillNotice(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      
+      const res = await fetch("/api/form-data", {
+        method: "POST",
+        body: formData,
+      });
+      
+      console.log("Response status:", res.status);
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("API Error:", errorData);
+        alert(`エラーが発生しました: ${errorData.error}\n詳細: ${errorData.details || ''}`);
+        return;
+      }
+      
+      const data = await res.json();
+      console.log("Response data:", data);
+      
+      saveAllData(data);
+      enableAutoFill();
+      setShowAutoFillNotice(true);
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert(`アップロードエラー: ${error instanceof Error ? error.message : String(error)}`);
+    }
   };
 
   const fetchAndAutoFillForm = async () => {
@@ -163,16 +186,27 @@ export function StepForm({ step, enableAutoFillDelay = true }: StepFormProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-center">
-        <Button
-          onClick={fetchAndAutoFillForm}
-          disabled={isLoading}
-          variant="outline"
-          className="bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
-        >
-          {isLoading ? "データ取得中..." : "保険証券画像からデータを取得"}
-        </Button>
-      </div>
+      {step === 1 && (
+        <>
+          <div className="fixed bottom-1 left-1/2 transform -translate-x-1/2 w-full max-w-md px-4 z-50">
+            <Button
+              onClick={fetchAndAutoFillForm}
+              disabled={isLoading}
+              className={`w-full py-6 gap-0 shadow-lg text-white flex flex-col items-center justify-center tracking-tight ${isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:from-purple-600 hover:to-blue-600'}`}
+              style={{ backgroundImage: 'linear-gradient(90deg, #7c3aed, #2563eb)' }}
+            >
+              {isLoading ? (
+                <span className="text-sm font-medium tracking-tight leading-tight">データ取得中...</span>
+              ) : (
+                <>
+                  <span className="text-xs tracking-tight leading-tight">\入力時間を70%短縮/</span>
+                  <span className="text-base font-bold mt-0.5 tracking-tight leading-tight">保険証券の画像を使って自動入力</span>
+                </>
+              )}
+            </Button>
+          </div>
+        </>
+      )}
       <ImageUploadModal
         open={showImageModal}
         onClose={() => setShowImageModal(false)}
