@@ -127,15 +127,6 @@ export function PopStepForm({ step, enableAutoFillDelay = false }: StepFormProps
   }
 
   const handleSubmit = (stepData: any) => {
-    // バリデーション実行
-    const errors = validateStepData(stepData, step)
-    setValidationErrors(errors)
-    
-    if (errors.length > 0) {
-      // エラーがある場合は処理を停止
-      return
-    }
-    
     // メインページに戻る
     router.push("/complete")
   }

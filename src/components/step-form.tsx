@@ -111,16 +111,6 @@ export function StepForm({ step, enableAutoFillDelay = true }: StepFormProps) {
   }
 
   const handleNext = (stepData: any) => {
-    // バリデーション実行
-    const errors = validateStepData(stepData, step)
-    setValidationErrors(errors)
-    
-    if (errors.length > 0) {
-      // エラーがある場合は処理を停止
-      return
-    }
-    
-    
     if (step < 3) {
       // 次のステップへ遷移
       router.push(`/step/${step + 1}`)
@@ -128,14 +118,6 @@ export function StepForm({ step, enableAutoFillDelay = true }: StepFormProps) {
   }
 
   const handleSubmit = (stepData: any) => {
-    // バリデーション実行
-    const errors = validateStepData(stepData, step)
-    setValidationErrors(errors)
-    
-    if (errors.length > 0) {
-      // エラーがある場合は処理を停止
-      return
-    }
     // 完了ページへ遷移
     router.push("/complete")
   }
