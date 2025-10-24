@@ -103,7 +103,7 @@ export function useAutoFillForm(
         if (enableDelay) {
           setTimeout(() => {
             processQueue(index + 1);
-          }, 300);
+          }, 100);
         } else {
           processQueue(index + 1);
         }
