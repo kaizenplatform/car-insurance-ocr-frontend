@@ -46,12 +46,16 @@ export async function POST(request: Request) {
 
     // OCR APIのURLを環境変数から取得
     const ocrApiUrl = process.env.POLICY_API_URL;
+    const ocrApiToken = process.env.API_TOKEN;
     if (!ocrApiUrl) {
       return NextResponse.json({ error: "OCR APIのURLが未設定です" }, { status: 500 });
     }
     // OCR APIへリクエスト
     const ocrRes = await fetch(ocrApiUrl, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${ocrApiToken}`
+      },
       body: (() => {
         const fd = new FormData();
         fd.append("file", file);
